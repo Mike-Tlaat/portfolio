@@ -1,0 +1,37 @@
+{
+  "profile": {
+    "photo": "data/me/me.png",
+    "name": "Michael Talaat",
+    "title": "Flutter Developer & UI/UX Designer",
+    "bio": "Senior-minded Flutter engineer focused on product-grade mobile apps, scalable architecture, and polished motion. I build fast, maintainable iOS and Android experiences with clean state management, thoughtful UX, and production-ready delivery."
+  },
+  "projects": [
+    {
+      "id": 1,
+      "name": "Quick Bite",
+      "cover": "data/project1/coverQB.jpg",
+      "description": "Quick Byte** is a fast and modern food ordering application designed to deliver a smooth user experience for browsing meals, placing orders, and tracking deliveries in real time. It includes a powerful admin panel that allows full control over products, orders, pricing, and analytics. Built with a focus on speed, usability, and scalability, Quick Byte provides an efficient bridge between customers and food services.",
+      "technologies": [
+        "Flutter",
+        "Dart",
+        "Firebase",
+        "Riverpod",
+        "Push Notifications"
+      ],
+      "images": [
+        "data/project1/QB1.jpg",
+        "data/project1/QB2.jpg",
+        "data/project1/QB3.jpg",
+        "data/project1/QB4.jpg",
+        "data/project1/QB5.jpg",
+        "data/project1/QB6.jpg",
+        "data/project1/QB7.jpg",
+        "data/project1/QB8.jpg",
+        "data/project1/QB9.jpg",
+        "data/project1/QB10.jpg",
+        "data/project1/QB11.jpg"
+      ],
+      "videos": ["data/project1/VQB1.mp4"]
+    }
+  ]
+}

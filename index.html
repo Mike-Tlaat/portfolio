@@ -1,0 +1,3505 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Michael Talaat | Flutter Developer & UI/UX Designer</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --bg: #020208;
+        --surface: rgba(8, 8, 24, 0.7);
+        --surface2: rgba(12, 12, 32, 0.85);
+        --border: rgba(0, 200, 255, 0.1);
+        --border-bright: rgba(0, 200, 255, 0.35);
+        --text: #f0f4ff;
+        --muted: #6b7fa3;
+        --cyan: #00c8ff;
+        --cyan2: #4fa8ff;
+        --green: #3ddc84;
+        --glow: rgba(0, 200, 255, 0.18);
+        --glow2: rgba(61, 220, 132, 0.18);
+        --dart-blue: #00b4d8;
+      }
+      body.light {
+        --bg: #f0f4f8;
+        --surface: rgba(255, 255, 255, 0.8);
+        --surface2: rgba(240, 244, 255, 0.9);
+        --border: rgba(0, 120, 200, 0.12);
+        --border-bright: rgba(0, 120, 200, 0.35);
+        --text: #0d1b2a;
+        --muted: #5a6e8a;
+        --cyan: #0284c7;
+        --cyan2: #0369a1;
+        --green: #16a34a;
+        --glow: rgba(2, 132, 199, 0.12);
+      }
+
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Space Grotesk", sans-serif;
+        overflow-x: hidden;
+        transition:
+          background 0.4s,
+          color 0.4s;
+      }
+
+      /* ===== CANVAS ===== */
+      #bg-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .wrap {
+        position: relative;
+        z-index: 2;
+        max-width: 1380px;
+        margin: 0 auto;
+        padding: 0 32px;
+      }
+
+      /* ===== NAV ===== */
+      nav {
+        position: fixed;
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 48px);
+        max-width: 1200px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 30px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 100px;
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+        transition:
+          background 0.4s,
+          border 0.4s;
+      }
+      .nav-logo {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        background: linear-gradient(90deg, var(--text), var(--cyan));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-decoration: none;
+      }
+      .nav-links {
+        display: flex;
+        gap: 22px;
+        list-style: none;
+      }
+      .nav-links a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.92rem;
+        font-weight: 500;
+        padding: 5px 0;
+        position: relative;
+        transition: color 0.3s;
+      }
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--cyan), var(--cyan2));
+        transition: width 0.3s ease;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--text);
+      }
+      .nav-links a:hover::after,
+      .nav-links a.active::after {
+        width: 100%;
+      }
+      .theme-btn {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        color: var(--text);
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        transition:
+          border-color 0.3s,
+          box-shadow 0.3s,
+          transform 0.2s;
+      }
+      .theme-btn:hover {
+        border-color: var(--cyan);
+        box-shadow: 0 0 14px var(--glow);
+        transform: translateY(-2px);
+      }
+
+      /* ===== SECTIONS ===== */
+      section {
+        padding: 130px 0 60px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      /* ===== REVEAL ===== */
+      .reveal {
+        opacity: 0;
+        transform: translateY(36px);
+        transition:
+          opacity 0.9s cubic-bezier(0.215, 0.61, 0.355, 1),
+          transform 0.9s cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ===== HERO ===== */
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        gap: 52px;
+        align-items: center;
+      }
+
+      /* Profile card */
+      .profile-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 40px;
+        padding: 56px 48px;
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        box-shadow: 0 28px 64px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+      .profile-card::before {
+        content: "";
+        position: absolute;
+        top: -80px;
+        right: -80px;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(0, 200, 255, 0.06),
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+
+      /* Avatar */
+      .avatar-wrap {
+        position: relative;
+        width: 130px;
+        height: 130px;
+        margin: 0 auto 32px;
+      }
+      .avatar-ring {
+        position: absolute;
+        inset: -9px;
+        border-radius: 50%;
+        background: conic-gradient(
+          var(--cyan),
+          var(--cyan2),
+          var(--green),
+          var(--cyan)
+        );
+        animation: spin 7s linear infinite;
+      }
+      .avatar-ring-mask {
+        position: absolute;
+        inset: -3px;
+        border-radius: 50%;
+        background: var(--bg);
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .avatar-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        z-index: 2;
+        background: #050515;
+        overflow: hidden;
+        border: 3px solid var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .avatar-inner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .avatar-inner .avatar-placeholder {
+        font-size: 3rem;
+        color: var(--cyan);
+        filter: drop-shadow(0 0 10px var(--cyan));
+      }
+
+      /* Hero text */
+      .hero-name {
+        font-family: "Orbitron", sans-serif;
+        font-size: 3rem;
+        font-weight: 900;
+        line-height: 1.1;
+        text-align: center;
+        margin-bottom: 16px;
+        letter-spacing: -0.5px;
+      }
+      .hero-role {
+        font-size: 1.05rem;
+        color: var(--cyan);
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+        font-family: "Fira Code", monospace;
+      }
+      .hero-bio {
+        color: var(--muted);
+        font-size: 0.97rem;
+        line-height: 1.78;
+        text-align: center;
+        max-width: 540px;
+        margin: 0 auto 32px;
+      }
+
+      /* Platform badges */
+      .badges {
+        display: flex;
+        justify-content: center;
+        gap: 36px;
+        padding-top: 28px;
+        border-top: 1px solid var(--border);
+      }
+      .badge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+      }
+      .badge-icon {
+        font-size: 2rem;
+      }
+      .badge-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        font-family: "Orbitron", sans-serif;
+        color: var(--muted);
+        letter-spacing: 1.5px;
+      }
+      .badge img.badge-icon {
+        width: 2rem;
+        height: 2rem;
+        object-fit: contain;
+        display: block;
+        transition: all 0.3s ease;
+      }
+      .badge i.badge-icon {
+        font-size: 2rem;
+        line-height: 1;
+      }
+      .ic-android {
+        color: var(--green);
+        filter: drop-shadow(0 0 7px var(--green));
+      }
+      .ic-apple {
+        color: #fff;
+        filter: drop-shadow(0 0 7px rgba(255, 255, 255, 0.6));
+      }
+      body.light .ic-apple {
+        color: #0f172a;
+        filter: none;
+      }
+      .ic-flutter {
+        color: var(--cyan2);
+        filter: drop-shadow(0 0 7px var(--cyan2));
+      }
+      .ic-dart {
+        color: var(--dart-blue);
+        filter: drop-shadow(0 0 7px var(--dart-blue));
+      }
+
+      /* ===== PHONE ANIMATION SECTION ===== */
+      .phone-scene {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 28px;
+        position: sticky;
+        top: 110px;
+        align-self: start;
+      }
+
+      /* 3D phone wrapper */
+      .phone-3d-wrap {
+        perspective: 1000px;
+        width: 230px;
+        height: 460px;
+        position: relative;
+      }
+      .phone-3d {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        animation: phoneSpin 14s ease-in-out infinite;
+      }
+      @keyframes phoneSpin {
+        0% {
+          transform: rotateY(0deg) rotateX(3deg);
+        }
+        20% {
+          transform: rotateY(-18deg) rotateX(4deg);
+        }
+        35% {
+          transform: rotateY(-180deg) rotateX(3deg);
+        }
+        55% {
+          transform: rotateY(-180deg) rotateX(3deg);
+        }
+        75% {
+          transform: rotateY(-18deg) rotateX(4deg);
+        }
+        100% {
+          transform: rotateY(0deg) rotateX(3deg);
+        }
+      }
+
+      /* Phone front face */
+      .phone-face {
+        position: absolute;
+        width: 80%;
+        height: 80%;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+
+      /* iPhone frame (front) */
+      .iphone-body {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          160deg,
+          #1c1c1e 0%,
+          #2c2c2e 40%,
+          #1a1a1c 100%
+        );
+        border-radius: 42px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow:
+          0 0 0 1px rgba(0, 0, 0, 0.8),
+          0 30px 60px rgba(0, 0, 0, 0.6),
+          0 0 30px var(--glow),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        position: relative;
+        overflow: hidden;
+      }
+      /* Side buttons */
+      .iphone-body::before {
+        content: "";
+        position: absolute;
+        left: -4px;
+        top: 100px;
+        width: 3px;
+        height: 34px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 2px 0 0 2px;
+        box-shadow:
+          0 44px 0 rgba(255, 255, 255, 0.15),
+          0 80px 0 rgba(255, 255, 255, 0.1);
+      }
+      .iphone-body::after {
+        content: "";
+        position: absolute;
+        right: -4px;
+        top: 130px;
+        width: 3px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 0 2px 2px 0;
+      }
+      /* Dynamic island */
+      .dynamic-island {
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 88px;
+        height: 26px;
+        background: #000;
+        border-radius: 20px;
+        z-index: 10;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+      }
+      /* Screen area */
+      .iphone-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 42px;
+        overflow: hidden;
+        background: #000;
+      }
+      /* Home indicator */
+      .home-bar {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+        z-index: 10;
+      }
+
+      /* Phone back face */
+      .phone-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform: rotateY(180deg);
+      }
+      .iphone-back-body {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          160deg,
+          #1c1c1e 0%,
+          #2c2c2e 50%,
+          #1a1a1c 100%
+        );
+        border-radius: 42px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow:
+          0 0 0 1px rgba(0, 0, 0, 0.8),
+          0 30px 60px rgba(0, 0, 0, 0.6),
+          inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        position: relative;
+        overflow: hidden;
+      }
+      /* Camera bump */
+      .camera-bump {
+        position: absolute;
+        top: 22px;
+        left: 18px;
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #2a2a2c, #1a1a1c);
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        padding: 12px;
+      }
+      .camera-lens {
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #3a3a3c, #0d0d0e);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.05);
+        position: relative;
+      }
+      .camera-lens::after {
+        content: "";
+        position: absolute;
+        top: 25%;
+        left: 25%;
+        width: 30%;
+        height: 30%;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+      }
+      .camera-flash {
+        grid-column: 1;
+        grid-row: 2;
+        border-radius: 8px;
+        background: radial-gradient(circle at 50% 50%, #3a2a10, #1a1008);
+        border: 1px solid rgba(255, 200, 100, 0.1);
+      }
+      .apple-logo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgba(255, 255, 255, 0.12);
+        font-size: 2.4rem;
+      }
+
+      /* Screen content states */
+      .screen-state {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+      .screen-state.visible {
+        opacity: 1;
+      }
+
+      /* iOS Lock Screen */
+      .screen-ios {
+        background: linear-gradient(
+          160deg,
+          #0a0a1a 0%,
+          #12132a 50%,
+          #080818 100%
+        );
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding-top: 40px;
+      }
+      .ios-time {
+        font-size: 3.2rem;
+        font-weight: 200;
+        color: #fff;
+        letter-spacing: -1px;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .ios-date {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 1px;
+      }
+      .ios-logo {
+        font-size: 2.4rem;
+        margin-top: 8px;
+      }
+
+      /* App screen */
+      .screen-app {
+        background: #060610;
+        display: flex;
+        flex-direction: column;
+        padding-top: 50px;
+        gap: 10px;
+        padding: 50px 14px 14px;
+      }
+      .app-topbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+        padding: 8px 10px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(0, 200, 255, 0.1);
+        border-radius: 12px;
+      }
+      .app-topbar-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--cyan);
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+      .app-topbar-title {
+        font-family: "Fira Code", monospace;
+        font-size: 0.6rem;
+        color: rgba(255, 255, 255, 0.5);
+        flex: 1;
+      }
+      .app-topbar-icon {
+        color: var(--cyan2);
+        font-size: 0.65rem;
+      }
+      .app-chart-area {
+        background: rgba(0, 200, 255, 0.03);
+        border: 1px solid rgba(0, 200, 255, 0.12);
+        border-radius: 14px;
+        padding: 10px;
+        height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .chart-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 5px;
+        height: 46px;
+      }
+      .chart-b {
+        flex: 1;
+        border-radius: 3px 3px 0 0;
+        background: linear-gradient(to top, var(--cyan2), var(--cyan));
+        animation: barAnim 1.8s ease-in-out infinite alternate;
+      }
+      .chart-b:nth-child(1) {
+        height: 40%;
+        animation-delay: 0.1s;
+      }
+      .chart-b:nth-child(2) {
+        height: 80%;
+        animation-delay: 0.3s;
+      }
+      .chart-b:nth-child(3) {
+        height: 55%;
+        animation-delay: 0.5s;
+      }
+      .chart-b:nth-child(4) {
+        height: 95%;
+        animation-delay: 0.2s;
+      }
+      .chart-b:nth-child(5) {
+        height: 65%;
+        animation-delay: 0.4s;
+      }
+      @keyframes barAnim {
+        from {
+          transform: scaleY(0.75);
+        }
+        to {
+          transform: scaleY(1);
+        }
+      }
+      .chart-line {
+        height: 2px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 2px;
+      }
+      .app-list-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.025);
+        border-radius: 10px;
+        padding: 8px 10px;
+      }
+      .item-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .item-lines {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .item-line {
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      /* Android screen */
+      .screen-android {
+        background: linear-gradient(160deg, #061a0f 0%, #020d06 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .android-icon {
+        font-size: 4rem;
+        color: var(--green);
+        filter: drop-shadow(0 0 20px var(--green));
+        animation: androidBounce 2s ease-in-out infinite;
+      }
+      @keyframes androidBounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+      .android-label {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.65rem;
+        color: var(--green);
+        letter-spacing: 3px;
+      }
+
+      /* Terminal */
+      .code-term {
+        width: 100%;
+        background: #121217;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 26px;
+        box-shadow:
+          inset 0 0 40px rgba(0, 0, 0, 0.9),
+          0 18px 40px rgba(0, 0, 0, 0.25);
+        min-height: 340px;
+      }
+      .term-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .term-dots {
+        display: flex;
+        gap: 7px;
+      }
+      .td {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+      }
+      .td-r {
+        background: #ef4444;
+      }
+      .td-y {
+        background: #f59e0b;
+      }
+      .td-g {
+        background: #10b981;
+      }
+      .term-filename {
+        font-family: "Fira Code", monospace;
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+      .term-body {
+        font-family: "Fira Code", monospace;
+        font-size: 0.86rem;
+        line-height: 1.8;
+        color: #a78bfa;
+        min-height: 230px;
+        white-space: pre-wrap;
+        border-left: 2px solid var(--cyan);
+        padding-left: 14px;
+        overflow: auto;
+      }
+      .cursor {
+        display: inline-block;
+        width: 8px;
+        height: 14px;
+        background: var(--cyan);
+        vertical-align: text-bottom;
+        animation: blink 1s step-end infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      /* ===== 3D PHONE UPGRADE ===== */
+      .phone-3d-wrap {
+        perspective: 1800px;
+        width: 292px;
+        height: 586px;
+      }
+      .phone-3d {
+        transform-style: preserve-3d;
+        animation: phoneSpin 12s ease-in-out infinite;
+        filter: drop-shadow(0 34px 42px rgba(0, 0, 0, 0.55));
+      }
+      .phone-3d::before {
+        content: "";
+        position: absolute;
+        inset: 22px -22px -34px -22px;
+        background: radial-gradient(
+          circle at 50% 50%,
+          rgba(0, 200, 255, 0.18),
+          transparent 60%
+        );
+        transform: translateZ(-100px);
+        filter: blur(18px);
+        pointer-events: none;
+      }
+      @keyframes phoneSpin {
+        0% {
+          transform: rotateY(-14deg) rotateX(10deg) translateY(0) scale(1.02);
+        }
+        25% {
+          transform: rotateY(-24deg) rotateX(11deg) translateY(-6px) scale(1.02);
+        }
+        50% {
+          transform: rotateY(14deg) rotateX(8deg) translateY(0) scale(1.02);
+        }
+        75% {
+          transform: rotateY(24deg) rotateX(10deg) translateY(-6px) scale(1.02);
+        }
+        100% {
+          transform: rotateY(-14deg) rotateX(10deg) translateY(0) scale(1.02);
+        }
+      }
+      .phone-face {
+        transform: translateZ(16px);
+      }
+      .phone-back {
+        transform: rotateY(180deg) translateZ(16px);
+      }
+
+      /* Phone SIDE thickness strips */
+      .phone-side-strip {
+        position: absolute;
+        top: 8px;
+        bottom: 8px;
+        width: 38px;
+        backface-visibility: hidden;
+      }
+      .phone-side-strip.right {
+        right: -19px;
+        background: linear-gradient(
+          180deg,
+          #2e2e33 0%,
+          #1a1a1f 50%,
+          #222226 100%
+        );
+        transform: rotateY(90deg);
+        transform-origin: left center;
+        border-radius: 0 10px 10px 0;
+      }
+      .phone-side-strip.left {
+        left: -19px;
+        background: linear-gradient(
+          180deg,
+          #262628 0%,
+          #141416 50%,
+          #1e1e21 100%
+        );
+        transform: rotateY(-90deg);
+        transform-origin: right center;
+        border-radius: 10px 0 0 10px;
+      }
+      /* side button accents */
+      .phone-side-strip.left::before {
+        content: "";
+        position: absolute;
+        left: 3px;
+        top: 20%;
+        width: 4px;
+        height: 9%;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.22),
+          rgba(255, 255, 255, 0.06)
+        );
+        border-radius: 2px;
+        box-shadow:
+          0 50px 0 rgba(255, 255, 255, 0.18),
+          0 88px 0 rgba(255, 255, 255, 0.12);
+      }
+      .phone-side-strip.right::after {
+        content: "";
+        position: absolute;
+        right: 3px;
+        top: 26%;
+        width: 4px;
+        height: 14%;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.18),
+          rgba(255, 255, 255, 0.06)
+        );
+        border-radius: 2px;
+      }
+
+      .iphone-body,
+      .iphone-back-body {
+        border-radius: 50px;
+      }
+      .iphone-body {
+        background: linear-gradient(
+          160deg,
+          #151518 0%,
+          #2a2b30 42%,
+          #101114 100%
+        );
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.05),
+          0 26px 60px rgba(0, 0, 0, 0.62),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          inset 0 -20px 30px rgba(0, 0, 0, 0.35);
+      }
+      .iphone-body::before {
+        left: -5px;
+        top: 112px;
+        width: 4px;
+        height: 38px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.22),
+          rgba(255, 255, 255, 0.06)
+        );
+        box-shadow:
+          0 52px 0 rgba(255, 255, 255, 0.18),
+          0 90px 0 rgba(255, 255, 255, 0.12);
+      }
+      .iphone-body::after {
+        right: -5px;
+        top: 140px;
+        width: 4px;
+        height: 72px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.18),
+          rgba(255, 255, 255, 0.06)
+        );
+      }
+      .iphone-screen {
+        background:
+          radial-gradient(
+            circle at 50% 14%,
+            rgba(255, 255, 255, 0.08),
+            transparent 24%
+          ),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 18%),
+          #050507;
+      }
+      .iphone-screen::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.13),
+          transparent 25%,
+          transparent 60%,
+          rgba(255, 255, 255, 0.04) 100%
+        );
+        pointer-events: none;
+        z-index: 2;
+      }
+      .iphone-screen::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 50% 0%,
+          rgba(255, 255, 255, 0.12),
+          transparent 30%
+        );
+        pointer-events: none;
+        z-index: 1;
+      }
+      .dynamic-island {
+        width: 96px;
+        height: 27px;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          0 0 0 1px rgba(255, 255, 255, 0.02);
+      }
+      .home-bar {
+        width: 108px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.18);
+      }
+      .screen-ios {
+        background:
+          radial-gradient(
+            circle at 50% 18%,
+            rgba(79, 168, 255, 0.16),
+            transparent 32%
+          ),
+          linear-gradient(160deg, #050818 0%, #101633 52%, #050611 100%);
+      }
+      .screen-app {
+        background:
+          radial-gradient(
+            circle at 50% 0%,
+            rgba(0, 200, 255, 0.12),
+            transparent 25%
+          ),
+          linear-gradient(180deg, #050510 0%, #070714 100%);
+      }
+      .screen-android {
+        background:
+          radial-gradient(
+            circle at 50% 0%,
+            rgba(61, 220, 132, 0.18),
+            transparent 25%
+          ),
+          linear-gradient(160deg, #041a0f 0%, #020806 100%);
+      }
+      .camera-bump {
+        top: 24px;
+        left: 20px;
+        width: 86px;
+        height: 86px;
+        background: linear-gradient(145deg, #2d2d30, #141416);
+        box-shadow:
+          0 8px 16px rgba(0, 0, 0, 0.45),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+      /* Back face: Apple logo top-center + Android logo bottom-center */
+      .iphone-back-body {
+        background: linear-gradient(
+          160deg,
+          #131315 0%,
+          #252528 50%,
+          #0f0f11 100%
+        );
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.04),
+          0 26px 60px rgba(0, 0, 0, 0.62),
+          inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      }
+      .apple-logo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -60%);
+        font-size: 3.6rem;
+        color: rgba(255, 255, 255, 0.18);
+        filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.08));
+      }
+      .android-back-logo {
+        position: absolute;
+        bottom: 48px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
+      .android-back-logo i {
+        font-size: 2.2rem;
+        color: var(--green);
+        filter: drop-shadow(0 0 10px var(--green));
+        animation: androidGlow 3s ease-in-out infinite;
+      }
+      .android-back-logo span {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.5rem;
+        color: var(--green);
+        letter-spacing: 3px;
+        opacity: 0.7;
+      }
+      @keyframes androidGlow {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 8px var(--green));
+        }
+        50% {
+          filter: drop-shadow(0 0 18px var(--green));
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .phone-3d-wrap {
+          width: 258px;
+          height: 516px;
+        }
+      }
+      @media (max-width: 768px) {
+        .phone-3d-wrap {
+          width: 226px;
+          height: 452px;
+        }
+        .iphone-body,
+        .iphone-back-body {
+          border-radius: 38px;
+        }
+      }
+
+      /* ===== SECTION HEADERS ===== */
+      .sec-header {
+        text-align: center;
+        margin-bottom: 56px;
+      }
+      .sec-tag {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.78rem;
+        color: var(--cyan);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 10px;
+      }
+      .sec-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 2.5rem;
+        font-weight: 900;
+        background: linear-gradient(90deg, var(--text), var(--cyan));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* ===== SKILLS (About) ===== */
+      .skills-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+      }
+      .skill-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 30px 28px;
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        transition:
+          border-color 0.3s,
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+      .skill-card:hover {
+        border-color: var(--border-bright);
+        transform: translateY(-5px);
+        box-shadow: 0 16px 40px var(--glow);
+      }
+      .skill-num {
+        font-family: "Orbitron", sans-serif;
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: var(--cyan);
+        line-height: 1;
+        flex-shrink: 0;
+        min-width: 44px;
+      }
+      .skill-info h3 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1rem;
+        margin-bottom: 8px;
+      }
+      .skill-info p {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.65;
+      }
+
+      /* ===== TECHNOLOGIES ===== */
+      .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 26px;
+      }
+      .tech-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 32px;
+        position: relative;
+        overflow: hidden;
+        transition:
+          border-color 0.3s,
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+      .tech-card:hover {
+        border-color: var(--border-bright);
+        transform: translateY(-7px);
+        box-shadow: 0 20px 44px var(--glow);
+      }
+      .tech-watermark {
+        position: absolute;
+        right: 18px;
+        top: 18px;
+        font-size: 3.8rem;
+        color: rgba(255, 255, 255, 0.025);
+        pointer-events: none;
+      }
+      .tech-icon {
+        margin-bottom: 22px;
+      }
+      .tech-icon img {
+        width: 2.8rem;
+        height: 2.8rem;
+        object-fit: contain;
+        display: block;
+        filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.08));
+      }
+
+      /* Custom Flutter icon SVG inline */
+      .flutter-svg,
+      .dart-svg {
+        width: 2.8rem;
+        height: 2.8rem;
+        display: block;
+      }
+
+      .tech-icon i {
+        font-size: 2.5rem;
+      }
+      .ic-flutter-tech {
+        color: var(--cyan2);
+        filter: drop-shadow(0 0 8px var(--cyan2));
+      }
+      .ic-dart-tech {
+        color: var(--dart-blue);
+        filter: drop-shadow(0 0 8px var(--dart-blue));
+      }
+      .ic-backend-tech {
+        color: #8b5cf6;
+        filter: drop-shadow(0 0 8px #8b5cf6);
+      }
+      .ic-design-tech {
+        color: #f472b6;
+        filter: drop-shadow(0 0 8px #f472b6);
+      }
+      .ic-state-tech {
+        color: var(--green);
+        filter: drop-shadow(0 0 8px var(--green));
+      }
+      .ic-cicd-tech {
+        color: #f59e0b;
+        filter: drop-shadow(0 0 8px #f59e0b);
+      }
+
+      .tech-name {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .tech-desc {
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.62;
+      }
+
+      /* ===== PROJECT CARD ANIMATIONS ===== */
+      @keyframes cardFloat {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+      @keyframes cardEnter {
+        from {
+          opacity: 0;
+          transform: translateY(50px) scale(0.94);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .project-card {
+        animation: cardEnter 0.6s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+      }
+      .project-card:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .project-card:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      .project-card:nth-child(3) {
+        animation-delay: 0.25s;
+      }
+      .project-card:nth-child(4) {
+        animation-delay: 0.35s;
+      }
+      .project-card:nth-child(5) {
+        animation-delay: 0.45s;
+      }
+      .project-card:nth-child(6) {
+        animation-delay: 0.55s;
+      }
+      .project-card:hover {
+        animation: none;
+        border-color: var(--border-bright);
+        transform: translateY(-5px);
+        box-shadow:
+          0 22px 50px rgba(0, 0, 0, 0.3),
+          0 0 20px var(--glow);
+      }
+      /* Floating glow orb behind thumb on hover */
+      .project-thumb::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 50% 50%,
+          rgba(0, 200, 255, 0.12),
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.4s;
+        pointer-events: none;
+      }
+      .project-card:hover .project-thumb::after {
+        opacity: 1;
+      }
+
+      /* ===== 3D PHONE MODAL ===== */
+      .phone-modal-scene {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 0 8px;
+      }
+      .phone-modal-wrap {
+        perspective: 1400px;
+        width: 252px;
+        height: 504px;
+        flex-shrink: 0;
+      }
+      .phone-modal-3d {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transform: rotateY(-8deg) rotateX(4deg);
+        transition: transform 0.4s ease;
+        filter: drop-shadow(0 28px 36px rgba(0, 0, 0, 0.65));
+      }
+      .phone-modal-wrap:hover .phone-modal-3d {
+        transform: rotateY(8deg) rotateX(2deg);
+      }
+      /* Thickness sides */
+      .phone-side-right {
+        position: absolute;
+        top: 6px;
+        bottom: 6px;
+        right: -11px;
+        width: 12px;
+        background: linear-gradient(
+          180deg,
+          #2e2e32 0%,
+          #18181b 50%,
+          #1a1a1e 100%
+        );
+        border-radius: 0 5px 5px 0;
+        transform: rotateY(90deg) translateZ(0px);
+        transform-origin: left center;
+        backface-visibility: hidden;
+      }
+      .phone-side-left {
+        position: absolute;
+        top: 6px;
+        bottom: 6px;
+        left: -11px;
+        width: 12px;
+        background: linear-gradient(
+          180deg,
+          #262628 0%,
+          #141416 50%,
+          #161618 100%
+        );
+        border-radius: 5px 0 0 5px;
+        transform: rotateY(-90deg) translateZ(0px);
+        transform-origin: right center;
+        backface-visibility: hidden;
+      }
+      .phone-side-left::before {
+        content: "";
+        position: absolute;
+        left: 2px;
+        top: 18%;
+        width: 3px;
+        height: 10%;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 2px;
+        box-shadow: 0 46px 0 rgba(255, 255, 255, 0.1);
+      }
+      .phone-side-right::after {
+        content: "";
+        position: absolute;
+        right: 2px;
+        top: 25%;
+        width: 3px;
+        height: 16%;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+      }
+      .phone-modal-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        transform: translateZ(6px);
+      }
+      .phone-modal-body {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          160deg,
+          #151518 0%,
+          #2a2b30 42%,
+          #101114 100%
+        );
+        border-radius: 44px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.04),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          inset 0 -20px 30px rgba(0, 0, 0, 0.35);
+        position: relative;
+        overflow: hidden;
+      }
+      .phone-modal-island {
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 86px;
+        height: 25px;
+        background: #000;
+        border-radius: 20px;
+        z-index: 10;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+      .phone-modal-screen {
+        position: absolute;
+        inset: 0;
+        border-radius: 44px;
+        overflow: hidden;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .phone-modal-screen::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1),
+          transparent 22%,
+          transparent 65%,
+          rgba(255, 255, 255, 0.03) 100%
+        );
+        pointer-events: none;
+        z-index: 2;
+        border-radius: 44px;
+      }
+      .phone-modal-screen img,
+      .phone-modal-screen video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .phone-modal-homebar {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 96px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+        z-index: 10;
+      }
+      /* Media nav inside phone modal */
+      .phone-modal-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 14px;
+      }
+      .phone-nav-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid var(--border-bright);
+        background: rgba(0, 200, 255, 0.07);
+        color: var(--cyan);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      .phone-nav-btn:hover {
+        background: rgba(0, 200, 255, 0.2);
+        transform: scale(1.1);
+      }
+      .phone-nav-btn:disabled {
+        opacity: 0.25;
+        cursor: default;
+      }
+      .phone-modal-counter {
+        font-family: "Fira Code", monospace;
+        font-size: 0.72rem;
+        color: var(--muted);
+        min-width: 40px;
+        text-align: center;
+      }
+      .phone-modal-caption {
+        text-align: center;
+        font-family: "Fira Code", monospace;
+        font-size: 0.68rem;
+        color: var(--cyan);
+        letter-spacing: 1px;
+        margin-top: 6px;
+        opacity: 0.7;
+      }
+      /* video play overlay inside phone */
+      .phone-media-play {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.28);
+        z-index: 3;
+        cursor: pointer;
+      }
+      .phone-media-play i {
+        font-size: 2.8rem;
+        color: #fff;
+        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.8));
+      }
+      .phone-media-play.hidden {
+        display: none;
+      }
+
+      #projects-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 32px;
+      }
+      .empty-projects {
+        grid-column: 1/-1;
+        text-align: center;
+        padding: 80px 20px;
+        color: var(--muted);
+      }
+      .empty-projects i {
+        font-size: 3rem;
+        margin-bottom: 18px;
+        color: var(--border-bright);
+        display: block;
+      }
+      .empty-projects h3 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        color: var(--text);
+      }
+      .empty-projects p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .project-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition:
+          border-color 0.3s,
+          transform 0.3s,
+          box-shadow 0.3s;
+        cursor: pointer;
+      }
+      .project-card:hover {
+        border-color: var(--border-bright);
+        transform: translateY(-5px);
+        box-shadow:
+          0 22px 50px rgba(0, 0, 0, 0.3),
+          0 0 20px var(--glow);
+      }
+      .project-thumb {
+        height: 200px;
+        background: linear-gradient(135deg, #06061a, #020208);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .project-thumb-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .project-thumb-placeholder {
+        font-size: 4rem;
+        color: rgba(255, 255, 255, 0.04);
+      }
+      .project-card:hover .project-thumb-placeholder {
+        color: var(--cyan);
+        filter: drop-shadow(0 0 15px var(--cyan));
+      }
+      .project-tags {
+        position: absolute;
+        bottom: 12px;
+        left: 16px;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .proj-tag {
+        background: rgba(0, 200, 255, 0.1);
+        border: 1px solid rgba(0, 200, 255, 0.2);
+        padding: 3px 9px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-family: "Fira Code", monospace;
+        color: var(--cyan);
+      }
+      .project-body {
+        padding: 26px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      .project-name {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+      }
+      .project-desc {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.65;
+        flex: 1;
+        margin-bottom: 20px;
+      }
+      .project-actions {
+        display: flex;
+        gap: 12px;
+      }
+      .btn-view {
+        flex: 1;
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          box-shadow 0.3s,
+          transform 0.2s;
+        border: none;
+      }
+      .btn-primary {
+        background: linear-gradient(90deg, var(--cyan), var(--cyan2));
+        color: #000;
+      }
+      .btn-primary:hover {
+        box-shadow: 0 0 18px var(--cyan);
+        transform: translateY(-1px);
+      }
+      .btn-ghost {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        color: var(--text);
+      }
+      .btn-ghost:hover {
+        border-color: var(--border-bright);
+      }
+
+      /* ===== PROJECT MODAL ===== */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(12px);
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal-box {
+        background: var(--surface2);
+        border: 1px solid var(--border-bright);
+        border-radius: 28px;
+        width: 100%;
+        max-width: 900px;
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow:
+          0 40px 80px rgba(0, 0, 0, 0.6),
+          0 0 40px var(--glow);
+        animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      @keyframes modalIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9) translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 24px 28px;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+      .modal-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+      }
+      .modal-close {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        color: var(--text);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+      }
+      .modal-close:hover {
+        background: rgba(255, 0, 0, 0.1);
+        border-color: rgba(255, 0, 0, 0.3);
+      }
+
+      /* Tabs */
+      .modal-tabs {
+        display: flex;
+        gap: 4px;
+        padding: 16px 28px 0;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+      .tab-btn {
+        padding: 8px 20px;
+        border-radius: 10px 10px 0 0;
+        border: none;
+        cursor: pointer;
+        font-size: 0.88rem;
+        font-weight: 600;
+        font-family: "Space Grotesk", sans-serif;
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid transparent;
+        border-bottom: none;
+        transition:
+          background 0.2s,
+          color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .tab-btn.active {
+        background: var(--surface);
+        color: var(--text);
+        border-color: var(--border);
+      }
+      .tab-btn:hover:not(.active) {
+        color: var(--text);
+      }
+
+      /* Modal content */
+      .modal-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 24px 28px;
+      }
+      .modal-body::-webkit-scrollbar {
+        width: 4px;
+      }
+      .modal-body::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .modal-body::-webkit-scrollbar-thumb {
+        background: var(--border-bright);
+        border-radius: 2px;
+      }
+
+      /* Media grid */
+      .media-grid {
+        display: grid;
+        gap: 16px;
+      }
+      .media-grid.portrait {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      }
+      .media-grid.landscape {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+      .media-item {
+        position: relative;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s,
+          transform 0.2s;
+        background: #000;
+      }
+      .media-item:hover {
+        border-color: var(--border-bright);
+        box-shadow: 0 8px 24px var(--glow);
+        transform: scale(1.02);
+      }
+      .media-item.portrait-item {
+        aspect-ratio: 9/16;
+      }
+      .media-item.landscape-item {
+        aspect-ratio: 16/9;
+      }
+      .media-item img,
+      .media-item video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .media-play-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.3);
+      }
+      .media-play-overlay i {
+        font-size: 2.2rem;
+        color: #fff;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8));
+      }
+      .empty-tab {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+      }
+      .empty-tab i {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 12px;
+        color: var(--border-bright);
+      }
+
+      /* ===== LIGHTBOX ===== */
+      .lightbox {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 3000;
+        background: rgba(0, 0, 0, 0.95);
+        align-items: center;
+        justify-content: center;
+      }
+      .lightbox.open {
+        display: flex;
+      }
+      .lightbox-inner {
+        position: relative;
+        max-width: 95vw;
+        max-height: 95vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      /* Portrait: phone-like frame */
+      .lightbox-inner.portrait-lb {
+        width: min(390px, 90vw);
+        height: auto;
+      }
+      /* Landscape: screen-like frame */
+      .lightbox-inner.landscape-lb {
+        width: min(900px, 92vw);
+        height: auto;
+      }
+
+      /* Decorative frame */
+      .lb-frame {
+        position: relative;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 2px solid var(--border-bright);
+        box-shadow:
+          0 0 60px var(--glow),
+          0 0 120px rgba(0, 200, 255, 0.05);
+      }
+      .lb-frame::before {
+        content: attr(data-label);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 8px 14px;
+        background: rgba(0, 0, 0, 0.85);
+        font-family: "Fira Code", monospace;
+        font-size: 0.7rem;
+        color: var(--cyan);
+        z-index: 10;
+        border-bottom: 1px solid var(--border);
+        letter-spacing: 1px;
+      }
+      .lb-frame img,
+      .lb-frame video {
+        display: block;
+        width: 100%;
+        padding-top: 30px; /* space for label */
+      }
+      .lb-close {
+        position: absolute;
+        top: -48px;
+        right: 0;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-bright);
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        transition: background 0.2s;
+      }
+      .lb-close:hover {
+        background: rgba(255, 50, 50, 0.2);
+      }
+      .lb-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid var(--border-bright);
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+      .lb-nav:hover {
+        background: rgba(0, 200, 255, 0.2);
+      }
+      .lb-prev {
+        left: -50px;
+      }
+      .lb-next {
+        right: -50px;
+      }
+
+      /* ===== CONTACT ===== */
+      .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+        max-width: 860px;
+        margin: 0 auto;
+      }
+      .contact-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 28px 24px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        text-decoration: none;
+        color: var(--text);
+        transition:
+          border-color 0.3s,
+          transform 0.2s,
+          box-shadow 0.3s;
+      }
+      .contact-card:hover {
+        border-color: var(--border-bright);
+        transform: scale(1.02);
+        box-shadow: 0 12px 32px var(--glow);
+      }
+      .contact-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 15px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+      }
+      .ci-gmail {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+      }
+      .ci-whatsapp {
+        background: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+        border: 1px solid rgba(34, 197, 94, 0.2);
+      }
+      .ci-linkedin {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+      }
+      .ci-github {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+      .contact-info h4 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1rem;
+        margin-bottom: 3px;
+      }
+      .contact-info p {
+        color: var(--muted);
+        font-size: 0.87rem;
+      }
+
+      /* ===== FOOTER ===== */
+      footer {
+        text-align: center;
+        padding: 48px 20px;
+        border-top: 1px solid var(--border);
+        margin-top: 60px;
+      }
+      footer p {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      footer span {
+        color: var(--cyan);
+        font-weight: 700;
+      }
+
+      /* ===== MOBILE NAV UPGRADE ===== */
+      section {
+        scroll-margin-top: 120px;
+      }
+
+      @media (max-width: 768px) {
+        .wrap {
+          padding: 0 18px;
+        }
+
+        nav {
+          flex-wrap: wrap;
+          gap: 10px 12px;
+          padding: 12px 16px;
+          border-radius: 26px;
+        }
+
+        .nav-logo {
+          font-size: 0.95rem;
+        }
+
+        .theme-btn {
+          margin-left: auto;
+        }
+
+        .nav-links {
+          display: flex !important;
+          width: 100%;
+          order: 3;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 8px;
+          padding-top: 4px;
+        }
+
+        .nav-links li {
+          list-style: none;
+        }
+
+        .nav-links a {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 6px 12px;
+          border-radius: 999px;
+          border: 1px solid var(--border);
+          background: rgba(255, 255, 255, 0.03);
+          font-size: 0.76rem;
+          white-space: nowrap;
+        }
+
+        .nav-links a::after {
+          display: none;
+        }
+
+        .nav-links a.active {
+          border-color: var(--border-bright);
+          background: rgba(0, 200, 255, 0.12);
+        }
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 1024px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+        .phone-scene {
+          position: static;
+          max-width: 480px;
+          margin: 0 auto;
+        }
+      }
+      @media (max-width: 768px) {
+        nav {
+          padding: 12px 20px;
+          width: calc(100% - 28px);
+        }
+        .nav-links {
+          display: none;
+        }
+        .hero-name {
+          font-size: 2.3rem;
+        }
+        .skills-grid {
+          grid-template-columns: 1fr;
+        }
+        .contact-grid {
+          grid-template-columns: 1fr;
+        }
+        .sec-title {
+          font-size: 2rem;
+        }
+        .modal-tabs {
+          padding: 12px 16px 0;
+        }
+        .modal-header {
+          padding: 18px 20px;
+        }
+        .modal-body {
+          padding: 18px 20px;
+        }
+        .lb-prev {
+          left: -10px;
+        }
+        .lb-next {
+          right: -10px;
+        }
+        .media-grid.portrait {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .media-grid.landscape {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="wrap">
+      <nav>
+        <a href="#" class="nav-logo">MT // DEV</a>
+        <ul class="nav-links">
+          <li><a href="#about" class="active">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#technologies">Stack</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button
+          class="theme-btn"
+          onclick="toggleTheme()"
+          aria-label="Toggle theme"
+        >
+          <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+      </nav>
+
+      <!-- ===== HERO ===== -->
+      <section id="about">
+        <div class="hero-grid reveal">
+          <!-- Profile card -->
+          <div class="profile-card">
+            <div class="avatar-wrap">
+              <div class="avatar-ring"></div>
+              <div class="avatar-ring-mask"></div>
+              <div class="avatar-inner">
+                <img
+                  id="profile-photo"
+                  src=""
+                  alt="Michael Talaat"
+                  style="display: none"
+                />
+                <i
+                  class="fas fa-user avatar-placeholder"
+                  id="avatar-placeholder"
+                ></i>
+              </div>
+            </div>
+
+            <h1 class="hero-name">Michael Talaat</h1>
+            <p class="hero-role">
+              &lt; Flutter Developer &amp; UI/UX Designer /&gt;
+            </p>
+            <p class="hero-bio" id="hero-bio">
+              Crafting high-performance, pixel-perfect mobile experiences for
+              both iOS and Android. I combine Flutter engineering depth with
+              UI/UX design sensibility — from information architecture and
+              visual hierarchy to state management, motion design, and polished
+              interfaces.
+            </p>
+
+            <div class="badges">
+              <div class="badge">
+                <i class="fab fa-android badge-icon ic-android"></i>
+                <span class="badge-label">Android</span>
+              </div>
+              <div class="badge">
+                <i class="fab fa-apple badge-icon ic-apple"></i>
+                <span class="badge-label">iOS</span>
+              </div>
+              <div class="badge">
+                <img
+                  src="data/flutterAndDart/flutter.png"
+                  class="badge-icon"
+                  alt="Flutter"
+                  style="filter: drop-shadow(0 0 6px #4fa8ff)"
+                />
+                <span class="badge-label">Flutter</span>
+              </div>
+              <div class="badge">
+                <img
+                  src="data/flutterAndDart/dart.png"
+                  class="badge-icon"
+                  alt="Dart"
+                  style="filter: drop-shadow(0 0 6px #00b4d8)"
+                />
+                <span class="badge-label">Dart</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phone + Terminal -->
+          <div class="phone-scene">
+            <div class="phone-3d-wrap">
+              <div class="phone-3d" id="phone3d">
+                <!-- Front: iPhone -->
+                <div class="phone-face">
+                  <div class="iphone-body">
+                    <div class="dynamic-island"></div>
+                    <div class="iphone-screen">
+                      <!-- iOS lock screen -->
+                      <div class="screen-state screen-ios" id="state-ios">
+                        <div class="ios-time" id="ios-clock">09:41</div>
+                        <div class="ios-date">Tuesday, June 9</div>
+                        <svg
+                          class="ios-logo"
+                          width="40"
+                          height="40"
+                          viewBox="0 0 40 40"
+                          fill="none"
+                        >
+                          <path
+                            d="M20 4C28.837 4 36 11.163 36 20C36 28.837 28.837 36 20 36C11.163 36 4 28.837 4 20C4 11.163 11.163 4 20 4Z"
+                            fill="white"
+                            fill-opacity="0.15"
+                          />
+                          <path
+                            d="M20 8L22 16H30L24 21L26 29L20 24L14 29L16 21L10 16H18L20 8Z"
+                            fill="white"
+                            fill-opacity="0.6"
+                          />
+                        </svg>
+                      </div>
+                      <!-- App screen -->
+                      <div class="screen-state screen-app" id="state-app">
+                        <div class="app-topbar">
+                          <div class="app-topbar-dot"></div>
+                          <div class="app-topbar-title">flutter_app</div>
+                          <i class="fas fa-wifi app-topbar-icon"></i>
+                        </div>
+                        <div class="app-chart-area">
+                          <div class="chart-row">
+                            <div class="chart-b"></div>
+                            <div class="chart-b"></div>
+                            <div class="chart-b"></div>
+                            <div class="chart-b"></div>
+                            <div class="chart-b"></div>
+                          </div>
+                          <div class="chart-line"></div>
+                        </div>
+                        <div class="app-list-item">
+                          <div
+                            class="item-dot"
+                            style="background: var(--cyan2)"
+                          ></div>
+                          <div class="item-lines">
+                            <div
+                              class="item-line"
+                              style="width: 70%; height: 5px"
+                            ></div>
+                            <div
+                              class="item-line"
+                              style="
+                                width: 45%;
+                                height: 4px;
+                                background: rgba(255, 255, 255, 0.06);
+                              "
+                            ></div>
+                          </div>
+                        </div>
+                        <div class="app-list-item">
+                          <div
+                            class="item-dot"
+                            style="background: var(--green)"
+                          ></div>
+                          <div class="item-lines">
+                            <div
+                              class="item-line"
+                              style="width: 60%; height: 5px"
+                            ></div>
+                            <div
+                              class="item-line"
+                              style="
+                                width: 35%;
+                                height: 4px;
+                                background: rgba(255, 255, 255, 0.06);
+                              "
+                            ></div>
+                          </div>
+                        </div>
+                        <div class="app-list-item">
+                          <div
+                            class="item-dot"
+                            style="background: #a78bfa"
+                          ></div>
+                          <div class="item-lines">
+                            <div
+                              class="item-line"
+                              style="width: 80%; height: 5px"
+                            ></div>
+                            <div
+                              class="item-line"
+                              style="
+                                width: 50%;
+                                height: 4px;
+                                background: rgba(255, 255, 255, 0.06);
+                              "
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Android screen -->
+                      <div
+                        class="screen-state screen-android"
+                        id="state-android"
+                      >
+                        <i class="fab fa-android android-icon"></i>
+                        <div class="android-label">Android</div>
+                      </div>
+                    </div>
+                    <div class="home-bar"></div>
+                  </div>
+                </div>
+                <!-- Back: iPhone back -->
+                <div class="phone-back">
+                  <div class="iphone-back-body">
+                    <div class="camera-bump">
+                      <div class="camera-lens"></div>
+                      <div class="camera-lens"></div>
+                      <div class="camera-flash"></div>
+                      <div class="camera-lens"></div>
+                    </div>
+                    <i class="fab fa-apple apple-logo"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Terminal -->
+            <div class="code-term">
+              <div class="term-header">
+                <div class="term-dots">
+                  <div class="td td-r"></div>
+                  <div class="td td-y"></div>
+                  <div class="td td-g"></div>
+                </div>
+                <div class="term-filename">michael_talaat.dart</div>
+              </div>
+              <div class="term-body" id="term-out">// Initializing...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SKILLS ===== -->
+      <section id="skills">
+        <div class="sec-header reveal">
+          <span class="sec-tag">Capabilities</span>
+          <h2 class="sec-title">Core Skill Set</h2>
+        </div>
+        <div class="skills-grid reveal">
+          <div class="skill-card">
+            <div class="skill-num">01</div>
+            <div class="skill-info">
+              <h3>UI Systems & Product-Grade Flutter Architecture</h3>
+              <p>
+                Designing polished UI systems, strong visual hierarchy, and
+                scalable app structures with clean separation of concerns,
+                reusable components, and maintainable code paths that hold up in
+                real production environments.
+              </p>
+            </div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-num">02</div>
+            <div class="skill-info">
+              <h3>Performance & UX Optimization</h3>
+              <p>
+                Reducing rebuild noise, tuning animations, optimizing image and
+                list rendering, and making interfaces feel fast, fluid, and
+                premium on both iOS and Android.
+              </p>
+            </div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-num">03</div>
+            <div class="skill-info">
+              <h3>State Orchestration</h3>
+              <p>
+                Managing complex app flows with BLoC, Riverpod, and Provider
+                while keeping logic predictable, testable, and easy for a team
+                to extend.
+              </p>
+            </div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-num">04</div>
+            <div class="skill-info">
+              <h3>API & Data Integration</h3>
+              <p>
+                Connecting Flutter apps to REST APIs, Firebase, and backend
+                services with strong error handling, caching, auth flows, and
+                data modeling.
+              </p>
+            </div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-num">05</div>
+            <div class="skill-info">
+              <h3>Code Quality & Testing</h3>
+              <p>
+                Writing cleaner, safer code with validation, modular
+                abstractions, test-friendly layers, and delivery practices that
+                reduce regressions.
+              </p>
+            </div>
+          </div>
+          <div class="skill-card">
+            <div class="skill-num">06</div>
+            <div class="skill-info">
+              <h3>Collaboration & Delivery</h3>
+              <p>
+                Translating design into implementation, aligning with product
+                goals, and shipping polished features with an eye for detail,
+                deadlines, and team velocity.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TECHNOLOGIES ===== -->
+      <section id="technologies">
+        <div class="sec-header reveal">
+          <span class="sec-tag">Tech Stack</span>
+          <h2 class="sec-title">Core Technologies</h2>
+        </div>
+        <div class="tech-grid reveal">
+          <div class="tech-card">
+            <div class="tech-watermark">
+              <i class="fas fa-mobile-screen-button"></i>
+            </div>
+            <div class="tech-icon">
+              <img src="data/flutterAndDart/flutter.png" alt="Flutter" />
+            </div>
+            <h3 class="tech-name">Flutter</h3>
+            <p class="tech-desc">
+              Building fast cross-platform interfaces with polished motion,
+              reusable widgets, and a single codebase for iOS and Android.
+            </p>
+          </div>
+          <div class="tech-card">
+            <div class="tech-watermark"><i class="fas fa-code"></i></div>
+            <div class="tech-icon">
+              <img src="data/flutterAndDart/dart.png" alt="Dart" />
+            </div>
+            <h3 class="tech-name">Dart</h3>
+            <p class="tech-desc">
+              Strongly typed, async-first Dart with null safety, isolates,
+              extension methods, and clean domain modeling.
+            </p>
+          </div>
+          <div class="tech-card">
+            <div class="tech-watermark"><i class="fas fa-layer-group"></i></div>
+            <div class="tech-icon">
+              <i
+                class="fas fa-layer-group"
+                style="
+                  font-size: 2.6rem;
+                  color: var(--green);
+                  filter: drop-shadow(0 0 8px var(--green));
+                "
+              ></i>
+            </div>
+            <h3 class="tech-name">BLoC / Riverpod</h3>
+            <p class="tech-desc">
+              Predictable state management for complex flows, with testable
+              logic, clear event handling, and scalable app structure.
+            </p>
+          </div>
+          <div class="tech-card">
+            <div class="tech-watermark"><i class="fas fa-fire"></i></div>
+            <div class="tech-icon">
+              <i
+                class="fas fa-fire"
+                style="
+                  font-size: 2.6rem;
+                  color: #f59e0b;
+                  filter: drop-shadow(0 0 8px #f59e0b);
+                "
+              ></i>
+            </div>
+            <h3 class="tech-name">Firebase</h3>
+            <p class="tech-desc">
+              Authentication, Firestore, storage, push notifications, remote
+              config, analytics, and Crashlytics for production apps.
+            </p>
+          </div>
+          <div class="tech-card">
+            <div class="tech-watermark">
+              <i class="fas fa-network-wired"></i>
+            </div>
+            <div class="tech-icon">
+              <i
+                class="fas fa-network-wired"
+                style="
+                  font-size: 2.6rem;
+                  color: #8b5cf6;
+                  filter: drop-shadow(0 0 8px #8b5cf6);
+                "
+              ></i>
+            </div>
+            <h3 class="tech-name">REST / API Layer</h3>
+            <p class="tech-desc">
+              Dio-based networking, request validation, pagination, caching, and
+              defensive error handling across remote data sources.
+            </p>
+          </div>
+          <div class="tech-card">
+            <div class="tech-watermark">
+              <i class="fas fa-screwdriver-wrench"></i>
+            </div>
+            <div class="tech-icon">
+              <i
+                class="fas fa-screwdriver-wrench"
+                style="
+                  font-size: 2.6rem;
+                  color: #38bdf8;
+                  filter: drop-shadow(0 0 8px #38bdf8);
+                "
+              ></i>
+            </div>
+            <h3 class="tech-name">Native Integration</h3>
+            <p class="tech-desc">
+              Platform channels, device permissions, background services, and
+              direct access to iOS / Android system capabilities.
+            </p>
+          </div>
+          <div class="tech-card">
+            <div class="tech-watermark"><i class="fas fa-vial"></i></div>
+            <div class="tech-icon">
+              <i
+                class="fas fa-vial"
+                style="
+                  font-size: 2.6rem;
+                  color: #f472b6;
+                  filter: drop-shadow(0 0 8px #f472b6);
+                "
+              ></i>
+            </div>
+            <h3 class="tech-name">Testing & QA</h3>
+            <p class="tech-desc">
+              Unit, widget, and integration testing with quality gates that keep
+              releases stable and code changes safe.
+            </p>
+          </div>
+          <div class="tech-card">
+            <div class="tech-watermark"><i class="fas fa-rocket"></i></div>
+            <div class="tech-icon">
+              <i
+                class="fas fa-rocket"
+                style="
+                  font-size: 2.6rem;
+                  color: #f59e0b;
+                  filter: drop-shadow(0 0 8px #f59e0b);
+                "
+              ></i>
+            </div>
+            <h3 class="tech-name">CI / CD Delivery</h3>
+            <p class="tech-desc">
+              Git-based workflows, automated builds, and release pipelines that
+              keep shipping fast without sacrificing reliability.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== PROJECTS ===== -->
+      <section id="projects">
+        <div class="sec-header reveal">
+          <span class="sec-tag">Work</span>
+          <h2 class="sec-title">Projects</h2>
+        </div>
+        <div id="projects-container" class="reveal">
+          <!-- Populated from data.json -->
+        </div>
+      </section>
+
+      <!-- ===== CONTACT ===== -->
+      <section id="contact">
+        <div class="sec-header reveal">
+          <span class="sec-tag">Get in Touch</span>
+          <h2 class="sec-title">Contact</h2>
+        </div>
+        <div class="contact-grid reveal">
+          <a href="mailto:michael.talaat.dev@gmail.com" class="contact-card">
+            <div class="contact-icon ci-gmail">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="contact-info">
+              <h4>Email</h4>
+              <p>michael.talaat.dev@gmail.com</p>
+            </div>
+          </a>
+          <a
+            href="https://wa.me/201277573021"
+            target="_blank"
+            class="contact-card"
+          >
+            <div class="contact-icon ci-whatsapp">
+              <i class="fab fa-whatsapp"></i>
+            </div>
+            <div class="contact-info">
+              <h4>WhatsApp</h4>
+              <p>+20 127 757 3021</p>
+            </div>
+          </a>
+          <a
+            href="https://linkedin.com/in/yourusername"
+            target="_blank"
+            class="contact-card"
+          >
+            <div class="contact-icon ci-linkedin">
+              <i class="fab fa-linkedin-in"></i>
+            </div>
+            <div class="contact-info">
+              <h4>LinkedIn</h4>
+              <p>Michael Talaat</p>
+            </div>
+          </a>
+          <a
+            href="https://github.com/yourusername"
+            target="_blank"
+            class="contact-card"
+          >
+            <div class="contact-icon ci-github">
+              <i class="fab fa-github"></i>
+            </div>
+            <div class="contact-info">
+              <h4>GitHub</h4>
+              <p>@yourusername</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <footer>
+        <p>
+          &copy; 2026 Designed &amp; Built by <span>Michael Talaat</span>.
+          Flutter Developer &amp; UI/UX Designer.
+        </p>
+      </footer>
+    </div>
+
+    <!-- ===== PROJECT MODAL ===== -->
+    <div class="modal-overlay" id="project-modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <div class="modal-title" id="modal-project-name">Project</div>
+          <button class="modal-close" onclick="closeModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-tabs">
+          <button
+            class="tab-btn active"
+            id="tab-info-btn"
+            onclick="switchTab('info')"
+          >
+            <i class="fas fa-info-circle"></i> Info
+          </button>
+          <button
+            class="tab-btn"
+            id="tab-images-btn"
+            onclick="switchTab('images')"
+          >
+            <i class="fas fa-images"></i> Photos
+            <span
+              id="img-count"
+              style="
+                font-family: &quot;Fira Code&quot;, monospace;
+                font-size: 0.75rem;
+                opacity: 0.6;
+              "
+            ></span>
+          </button>
+          <button
+            class="tab-btn"
+            id="tab-videos-btn"
+            onclick="switchTab('videos')"
+          >
+            <i class="fas fa-play-circle"></i> Videos
+            <span
+              id="vid-count"
+              style="
+                font-family: &quot;Fira Code&quot;, monospace;
+                font-size: 0.75rem;
+                opacity: 0.6;
+              "
+            ></span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Info tab -->
+          <div id="tab-info" class="tab-content">
+            <p
+              id="modal-desc"
+              style="
+                color: var(--muted);
+                line-height: 1.7;
+                margin-bottom: 20px;
+                font-size: 0.95rem;
+              "
+            ></p>
+            <div
+              id="modal-tech-tags"
+              style="display: flex; flex-wrap: wrap; gap: 8px"
+            ></div>
+          </div>
+          <!-- Images tab -->
+          <div id="tab-images" class="tab-content" style="display: none">
+            <div id="images-grid"></div>
+          </div>
+          <!-- Videos tab -->
+          <div id="tab-videos" class="tab-content" style="display: none">
+            <div id="videos-grid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== LIGHTBOX ===== -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+      <div class="lightbox-inner" id="lb-inner">
+        <button class="lb-close" onclick="closeLightboxBtn()">
+          <i class="fas fa-times"></i>
+        </button>
+        <button
+          class="lb-nav lb-prev"
+          id="lb-prev"
+          onclick="
+            lbNav(-1);
+            event.stopPropagation();
+          "
+        >
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="lb-frame" id="lb-frame" data-label="// media_viewer.dart">
+          <img id="lb-img" src="" alt="" style="display: none" />
+          <video id="lb-vid" controls style="display: none"></video>
+        </div>
+        <button
+          class="lb-nav lb-next"
+          id="lb-next"
+          onclick="
+            lbNav(1);
+            event.stopPropagation();
+          "
+        >
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // ===== PARTICLE CANVAS =====
+      const canvas = document.getElementById("bg-canvas");
+      const ctx = canvas.getContext("2d");
+      let W,
+        H,
+        particles = [];
+      let mouse = { x: null, y: null };
+
+      function initParticles() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+        particles = [];
+        const n = W > 768 ? 80 : 40;
+        for (let i = 0; i < n; i++)
+          particles.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            vx: (Math.random() - 0.5) * 0.6,
+            vy: (Math.random() - 0.5) * 0.6,
+            r: Math.random() * 1.8 + 0.8,
+          });
+      }
+      function drawParticles() {
+        ctx.clearRect(0, 0, W, H);
+        const light = document.body.classList.contains("light");
+        const nc = light ? "rgba(2,132,199,0.3)" : "rgba(0,200,255,0.3)";
+        const lc = light ? "rgba(2,132,199,0.06)" : "rgba(0,200,255,0.06)";
+        particles.forEach((p) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > W) p.vx *= -1;
+          if (p.y < 0 || p.y > H) p.vy *= -1;
+          if (mouse.x) {
+            const d = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+            if (d < 110) {
+              p.x += (p.x - mouse.x) * 0.02;
+              p.y += (p.y - mouse.y) * 0.02;
+            }
+          }
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = nc;
+          ctx.fill();
+          particles.forEach((o) => {
+            const d = Math.hypot(p.x - o.x, p.y - o.y);
+            if (d < 140) {
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(o.x, o.y);
+              ctx.strokeStyle = lc;
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          });
+        });
+        requestAnimationFrame(drawParticles);
+      }
+      window.addEventListener("resize", initParticles);
+      window.addEventListener("mousemove", (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+      window.addEventListener("mouseout", () => {
+        mouse.x = null;
+        mouse.y = null;
+      });
+      initParticles();
+      drawParticles();
+
+      // ===== THEME =====
+      function toggleTheme() {
+        document.body.classList.toggle("light");
+        document.getElementById("theme-icon").className =
+          document.body.classList.contains("light")
+            ? "fas fa-sun"
+            : "fas fa-moon";
+      }
+
+      // ===== SCROLL REVEAL =====
+      const revealObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("in");
+          });
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
+      );
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => revealObs.observe(el));
+
+      // Nav active link
+      const sections = document.querySelectorAll("section");
+      const navLinks = document.querySelectorAll(".nav-links a");
+      const navObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              const id = e.target.id;
+              navLinks.forEach((l) => {
+                l.classList.remove("active");
+                if (l.getAttribute("href") === "#" + id)
+                  l.classList.add("active");
+              });
+            }
+          });
+        },
+        { threshold: 0.4 },
+      );
+      sections.forEach((s) => navObs.observe(s));
+
+      // ===== PHONE SCREEN ANIMATION =====
+      const stateIos = document.getElementById("state-ios");
+      const stateApp = document.getElementById("state-app");
+      const stateAndroid = document.getElementById("state-android");
+
+      function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, "0");
+        const m = String(now.getMinutes()).padStart(2, "0");
+        document.getElementById("ios-clock").textContent = h + ":" + m;
+      }
+      updateClock();
+      setInterval(updateClock, 10000);
+
+      // Cycle: iOS → App → Android
+      const states = [stateIos, stateApp, stateAndroid];
+      let curState = 0;
+      states[0].classList.add("visible");
+      setInterval(() => {
+        states[curState].classList.remove("visible");
+        curState = (curState + 1) % 3;
+        states[curState].classList.add("visible");
+      }, 4000);
+
+      // ===== TYPEWRITER =====
+      const termOut = document.getElementById("term-out");
+      const snippets = [
+        `class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BlocBuilder<AppCubit, AppState>(
+        builder: (ctx, state) => AnimatedSwitcher(
+          duration: const Duration(milliseconds: 350),
+          child: state.view,
+        ),
+      ),
+    );
+  }
+}`,
+        `Future<List<T>> fetchData<T extends Model>(
+  String endpoint, {
+  Map<String, dynamic>? params,
+}) async {
+  final response = await _dio.get(
+    endpoint,
+    queryParameters: params,
+  );
+  return (response.data as List)
+    .map((e) => T.fromJson(e))
+    .toList();
+}`,
+        `extension BuildContextX on BuildContext {
+  ThemeData get theme => Theme.of(this);
+  TextTheme get textTheme => theme.textTheme;
+  ColorScheme get colors => theme.colorScheme;
+  MediaQueryData get media => MediaQuery.of(this);
+  double get screenWidth => media.size.width;
+  bool get isTablet => screenWidth >= 768;
+}`,
+      ];
+      let si = 0,
+        ci = 0,
+        deleting = false;
+      function typeLoop() {
+        const s = snippets[si];
+        if (!deleting) {
+          termOut.innerHTML =
+            s.substring(0, ci + 1) + '<span class="cursor"></span>';
+          ci++;
+          if (ci === s.length) {
+            deleting = true;
+            setTimeout(typeLoop, 3200);
+            return;
+          }
+        } else {
+          termOut.innerHTML =
+            s.substring(0, ci - 1) + '<span class="cursor"></span>';
+          ci--;
+          if (ci === 0) {
+            deleting = false;
+            si = (si + 1) % snippets.length;
+          }
+        }
+        setTimeout(typeLoop, deleting ? 7 : 18);
+      }
+      setTimeout(typeLoop, 600);
+
+      // ===== LOAD DATA.JSON =====
+      const FALLBACK_DATA = {
+        profile: {
+          photo: "",
+          name: "Michael Talaat",
+          title: "Flutter Developer & UI/UX Designer",
+          bio: "Senior-minded Flutter engineer focused on product-grade mobile apps, scalable architecture, and polished motion. I build fast, maintainable iOS and Android experiences with clean state management, thoughtful UX, and production-ready delivery.",
+        },
+        projects: [
+          {
+            id: 1,
+            name: "FinTech Dashboard",
+            cover: "",
+            description:
+              "A cross-platform finance dashboard with real-time metrics, clean data visualization, and role-based access for product teams.",
+            technologies: ["Flutter", "Dart", "Firebase", "Charts"],
+            images: [],
+            videos: [],
+          },
+          {
+            id: 2,
+            name: "Clinic Booking App",
+            cover: "",
+            description:
+              "Appointment scheduling, patient flow, and notifications in a responsive mobile experience designed for low-friction booking.",
+            technologies: [
+              "Flutter",
+              "Riverpod",
+              "REST API",
+              "Push Notifications",
+            ],
+            images: [],
+            videos: [],
+          },
+          {
+            id: 3,
+            name: "Commerce Mobile App",
+            cover: "",
+            description:
+              "A polished shopping experience with product browsing, checkout flows, wishlist state, and fast cart interactions.",
+            technologies: ["Flutter", "Dart", "Bloc", "Firebase"],
+            images: [],
+            videos: [],
+          },
+          {
+            id: 4,
+            name: "Delivery Operations Panel",
+            cover: "",
+            description:
+              "Operations UI for tracking delivery status, assignments, and live updates across multiple user roles.",
+            technologies: ["Flutter", "Dio", "Supabase", "Maps"],
+            images: [],
+            videos: [],
+          },
+          {
+            id: 5,
+            name: "Fitness Progress Tracker",
+            cover: "",
+            description:
+              "A motivating habit and workout tracker with progress cards, streak logic, and responsive charts.",
+            technologies: ["Flutter", "Hive", "Animations", "State Management"],
+            images: [],
+            videos: [],
+          },
+        ],
+      };
+
+      let projectsData = [];
+      let currentProject = null;
+      let currentMediaList = [];
+      let currentLbIndex = 0;
+
+      function applyPortfolioData(data) {
+        const profile = data.profile || {};
+
+        if (profile.name) {
+          document.querySelector(".hero-name").textContent = profile.name;
+        }
+        if (profile.title) {
+          document.querySelector(".hero-role").textContent =
+            `< ${profile.title} />`;
+        }
+        if (profile.photo) {
+          const img = document.getElementById("profile-photo");
+          img.src = profile.photo;
+          img.style.display = "block";
+          const ph = document.getElementById("avatar-placeholder");
+          if (ph) ph.style.display = "none";
+        }
+        if (profile.bio) {
+          document.getElementById("hero-bio").textContent = profile.bio;
+        }
+        document.title = `${profile.name || "Portfolio"} | ${profile.title || "Flutter Developer & UI/UX Designer"}`;
+
+        projectsData = (data.projects || []).filter((p) => p && p.name);
+        renderProjects();
+      }
+
+      async function loadData() {
+        try {
+          const res = await fetch("./data.json", { cache: "no-store" });
+          if (!res.ok) throw new Error("Failed to fetch data.json");
+          const data = await res.json();
+          applyPortfolioData(data);
+        } catch (e) {
+          applyPortfolioData(FALLBACK_DATA);
+        }
+      }
+
+      function renderProjects() {
+        const container = document.getElementById("projects-container");
+        if (!projectsData.length) {
+          container.innerHTML = `
+      <div class="empty-projects">
+        <i class="fas fa-folder-open"></i>
+        <h3>Projects coming soon</h3>
+        <p>Add your projects to <code style="color:var(--cyan);font-family:'Fira Code',monospace">data.json</code> to display them here.<br>
+        Use <code style="color:var(--cyan);font-family:'Fira Code',monospace">cover</code> to choose the project thumbnail manually.</p>
+      </div>`;
+          return;
+        }
+        container.innerHTML = projectsData
+          .map((p, i) => {
+            // Use the cover field first, then image fallback, then placeholder
+            const coverSrc =
+              p.cover ||
+              p.coverImage ||
+              p.thumbnail ||
+              (p.images && p.images[0]) ||
+              null;
+            const thumb = coverSrc
+              ? `<img class="project-thumb-img" src="${coverSrc}" alt="${p.name}" />`
+              : `<i class="fas fa-mobile-alt project-thumb-placeholder"></i>`;
+            const tags = (p.technologies || [])
+              .map((t) => `<span class="proj-tag">${t}</span>`)
+              .join("");
+            return `
+    <div class="project-card" onclick="openProject(${i})">
+      <div class="project-thumb">
+        ${thumb}
+        <div class="project-tags">${tags}</div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-name">${p.name}</h3>
+        <p class="project-desc">${(p.description || "").substring(0, 130)}${(p.description || "").length > 130 ? "..." : ""}</p>
+        <div class="project-actions">
+          <button class="btn-view btn-primary" onclick="openProject(${i});event.stopPropagation()">
+            <i class="fas fa-eye"></i> View Project
+          </button>
+        </div>
+      </div>
+    </div>`;
+          })
+          .join("");
+      }
+
+      // ===== MODAL =====
+      function openProject(i) {
+        currentProject = projectsData[i];
+        document.getElementById("modal-project-name").textContent =
+          currentProject.name;
+        document.getElementById("modal-desc").textContent =
+          currentProject.description || "";
+        const tags = document.getElementById("modal-tech-tags");
+        tags.innerHTML = (currentProject.technologies || [])
+          .map((t) => `<span class="proj-tag">${t}</span>`)
+          .join("");
+        const imgs = currentProject.images || [];
+        const vids = currentProject.videos || [];
+        document.getElementById("img-count").textContent = imgs.length
+          ? `(${imgs.length})`
+          : "";
+        document.getElementById("vid-count").textContent = vids.length
+          ? `(${vids.length})`
+          : "";
+        switchTab("info");
+        document.getElementById("project-modal").classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+      function closeModal() {
+        document.getElementById("project-modal").classList.remove("open");
+        document.body.style.overflow = "";
+      }
+      document
+        .getElementById("project-modal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeModal();
+        });
+
+      function switchTab(tab) {
+        ["info", "images", "videos"].forEach((t) => {
+          document.getElementById("tab-" + t).style.display =
+            t === tab ? "block" : "none";
+          document
+            .getElementById("tab-" + t + "-btn")
+            .classList.toggle("active", t === tab);
+        });
+        if (tab === "images") renderMediaGrid("images");
+        if (tab === "videos") renderMediaGrid("videos");
+      }
+
+      function isPortrait(url) {
+        // Heuristic: check for keywords; default portrait for unknown
+        const l = url.toLowerCase();
+        if (
+          l.includes("landscape") ||
+          l.includes("wide") ||
+          l.includes("screen") ||
+          l.includes("tablet")
+        )
+          return false;
+        return true;
+      }
+
+      // ===== PHONE MODAL MEDIA =====
+      let phoneMediaList = [];
+      let phoneMediaIdx = 0;
+      let phoneMediaType = "images";
+
+      function renderMediaGrid(type) {
+        const items = currentProject ? currentProject[type] || [] : [];
+        const gridId = type === "images" ? "images-grid" : "videos-grid";
+        const grid = document.getElementById(gridId);
+        phoneMediaType = type;
+
+        if (!items.length) {
+          grid.innerHTML = `<div class="empty-tab"><i class="fas fa-${type === "images" ? "images" : "play-circle"}"></i><p>No ${type} added yet</p></div>`;
+          return;
+        }
+
+        phoneMediaList = items;
+        phoneMediaIdx = 0;
+        currentMediaList = items; // keep lightbox compat
+
+        grid.innerHTML = `
+          <div class="phone-modal-scene">
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div class="phone-modal-wrap">
+                <div class="phone-modal-3d" id="phone-modal-3d">
+                  <div class="phone-side-left"></div>
+                  <div class="phone-side-right"></div>
+                  <div class="phone-modal-face">
+                    <div class="phone-modal-body">
+                      <div class="phone-modal-island"></div>
+                      <div class="phone-modal-screen" id="phone-modal-screen">
+                        <!-- content injected -->
+                      </div>
+                      <div class="phone-modal-homebar"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="phone-modal-nav" style="margin-top:18px">
+                <button class="phone-nav-btn" id="phone-prev-btn" onclick="phoneNav(-1)"><i class="fas fa-chevron-left"></i></button>
+                <span class="phone-modal-counter" id="phone-counter">1 / ${items.length}</span>
+                <button class="phone-nav-btn" id="phone-next-btn" onclick="phoneNav(1)"><i class="fas fa-chevron-right"></i></button>
+              </div>
+              <div class="phone-modal-caption" id="phone-caption">// ${type === "images" ? "screenshot" : "video"}_viewer.dart</div>
+            </div>
+          </div>`;
+
+        renderPhoneMedia();
+      }
+
+      function renderPhoneMedia() {
+        const url = phoneMediaList[phoneMediaIdx];
+        const screen = document.getElementById("phone-modal-screen");
+        if (!screen) return;
+        const isVideo =
+          /\.(mp4|webm|mov|avi)$/i.test(url) || url.includes("video");
+        if (isVideo) {
+          screen.innerHTML = `
+            <video id="phone-vid" src="${url}" style="width:100%;height:100%;object-fit:cover;display:block;" playsinline loop></video>
+            <div class="phone-media-play" id="phone-play-overlay" onclick="togglePhoneVideo()">
+              <i class="fas fa-play"></i>
+            </div>`;
+        } else {
+          screen.innerHTML = `<img src="${url}" alt="screenshot" style="width:100%;height:100%;object-fit:cover;display:block;" onclick="openLightbox(${phoneMediaIdx})" />`;
+        }
+        const counter = document.getElementById("phone-counter");
+        if (counter)
+          counter.textContent = `${phoneMediaIdx + 1} / ${phoneMediaList.length}`;
+        const prev = document.getElementById("phone-prev-btn");
+        const next = document.getElementById("phone-next-btn");
+        if (prev) prev.disabled = phoneMediaIdx === 0;
+        if (next) next.disabled = phoneMediaIdx === phoneMediaList.length - 1;
+      }
+
+      function phoneNav(dir) {
+        const next = phoneMediaIdx + dir;
+        if (next < 0 || next >= phoneMediaList.length) return;
+        // pause any playing video
+        const vid = document.getElementById("phone-vid");
+        if (vid) {
+          vid.pause();
+        }
+        phoneMediaIdx = next;
+        renderPhoneMedia();
+      }
+
+      function togglePhoneVideo() {
+        const vid = document.getElementById("phone-vid");
+        const overlay = document.getElementById("phone-play-overlay");
+        if (!vid) return;
+        if (vid.paused) {
+          vid.play();
+          overlay.classList.add("hidden");
+        } else {
+          vid.pause();
+          overlay.classList.remove("hidden");
+        }
+      }
+
+      // ===== LIGHTBOX =====
+      function openLightbox(idx) {
+        currentLbIndex = idx;
+        renderLbItem();
+        document.getElementById("lightbox").classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+      function renderLbItem() {
+        const url = currentMediaList[currentLbIndex];
+        const portrait = isPortrait(url);
+        const inner = document.getElementById("lb-inner");
+        inner.className =
+          "lightbox-inner " + (portrait ? "portrait-lb" : "landscape-lb");
+        const img = document.getElementById("lb-img");
+        const vid = document.getElementById("lb-vid");
+        const isVideo =
+          /\.(mp4|webm|mov|avi)$/i.test(url) || url.includes("video");
+        if (isVideo) {
+          vid.src = url;
+          vid.style.display = "block";
+          img.style.display = "none";
+          document
+            .getElementById("lb-frame")
+            .setAttribute("data-label", "// video_player.dart");
+        } else {
+          img.src = url;
+          img.style.display = "block";
+          vid.style.display = "none";
+          vid.src = "";
+          document
+            .getElementById("lb-frame")
+            .setAttribute("data-label", "// image_viewer.dart");
+        }
+        // Nav visibility
+        document.getElementById("lb-prev").style.opacity =
+          currentLbIndex > 0 ? "1" : "0.2";
+        document.getElementById("lb-next").style.opacity =
+          currentLbIndex < currentMediaList.length - 1 ? "1" : "0.2";
+      }
+      function lbNav(dir) {
+        const next = currentLbIndex + dir;
+        if (next < 0 || next >= currentMediaList.length) return;
+        currentLbIndex = next;
+        renderLbItem();
+      }
+      function closeLightbox(e) {
+        if (e.target === document.getElementById("lightbox"))
+          closeLightboxBtn();
+      }
+      function closeLightboxBtn() {
+        document.getElementById("lightbox").classList.remove("open");
+        document.getElementById("lb-vid").pause &&
+          document.getElementById("lb-vid").pause();
+        document.getElementById("lb-vid").src = "";
+        // Only remove overflow if modal is also closed
+        if (
+          !document.getElementById("project-modal").classList.contains("open")
+        )
+          document.body.style.overflow = "";
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeLightboxBtn();
+          closeModal();
+        }
+        if (document.getElementById("lightbox").classList.contains("open")) {
+          if (e.key === "ArrowLeft") lbNav(-1);
+          if (e.key === "ArrowRight") lbNav(1);
+        }
+      });
+
+      // Init
+      loadData();
+    </script>
+  </body>
+</html>
