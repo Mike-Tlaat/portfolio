@@ -10,7 +10,7 @@
       "id": 1,
       "name": "Quick Bite",
       "cover": "data/project1/coverQB.jpg",
-      "description": "Quick Byte** is a fast and modern food ordering application designed to deliver a smooth user experience for browsing meals, placing orders, and tracking deliveries in real time. It includes a powerful admin panel that allows full control over products, orders, pricing, and analytics. Built with a focus on speed, usability, and scalability, Quick Byte provides an efficient bridge between customers and food services.",
+      "description": "Quick Byte is a fast and modern food ordering application designed to deliver a smooth user experience for browsing meals, placing orders, and tracking deliveries in real time. It includes a powerful admin panel that allows full control over products, orders, pricing, and analytics. Built with a focus on speed, usability, and scalability, Quick Byte provides an efficient bridge between customers and food services.",
       "technologies": [
         "Flutter",
         "Dart",
@@ -31,7 +31,7 @@
         "data/project1/QB10.jpg",
         "data/project1/QB11.jpg"
       ],
-      "videos": ["data/project1/VQB1.mp4"]
+      "videos": ["https://drive.google.com/file/d/1ID5wnedSFqPm1rhRb1cNHf01nNzOynSi/view?usp=drivesdk"]
     }
   ]
 }
