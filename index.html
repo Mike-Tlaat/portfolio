@@ -196,8 +196,8 @@
       /* ===== HERO ===== */
       .hero-grid {
         display: grid;
-        grid-template-columns: 1.15fr 1fr;
-        gap: 52px;
+        grid-template-columns: 1fr 1.1fr;
+        gap: 64px;
         align-items: center;
       }
 
@@ -205,25 +205,42 @@
       .profile-card {
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 40px;
-        padding: 56px 48px;
+        border-radius: 32px;
+        padding: 48px 44px;
         backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
-        box-shadow: 0 28px 64px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 24px 56px rgba(0, 0, 0, 0.22);
         position: relative;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
       }
       .profile-card::before {
         content: "";
         position: absolute;
-        top: -80px;
-        right: -80px;
-        width: 240px;
-        height: 240px;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          var(--cyan),
+          var(--green),
+          transparent
+        );
+        border-radius: 3px 0 0 3px;
+      }
+      .profile-card::after {
+        content: "";
+        position: absolute;
+        bottom: -60px;
+        right: -60px;
+        width: 200px;
+        height: 200px;
         border-radius: 50%;
         background: radial-gradient(
           circle,
-          rgba(0, 200, 255, 0.06),
+          rgba(0, 200, 255, 0.05),
           transparent 70%
         );
         pointer-events: none;
@@ -232,9 +249,9 @@
       /* Avatar */
       .avatar-wrap {
         position: relative;
-        width: 130px;
-        height: 130px;
-        margin: 0 auto 32px;
+        width: 100px;
+        height: 100px;
+        flex-shrink: 0;
       }
       .avatar-ring {
         position: absolute;
@@ -285,66 +302,106 @@
       }
 
       /* Hero text */
+      .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 28px;
+      }
+      .profile-header-info {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
       .hero-name {
         font-family: "Orbitron", sans-serif;
-        font-size: 3rem;
+        font-size: 2rem;
         font-weight: 900;
         line-height: 1.1;
-        text-align: center;
-        margin-bottom: 16px;
+        text-align: left;
         letter-spacing: -0.5px;
+        background: linear-gradient(90deg, var(--text), var(--cyan));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
       .hero-role {
-        font-size: 1.05rem;
+        font-size: 0.85rem;
         color: var(--cyan);
         font-weight: 600;
-        text-align: center;
-        margin-bottom: 20px;
-        letter-spacing: 1px;
+        text-align: left;
+        letter-spacing: 0.5px;
         font-family: "Fira Code", monospace;
+        opacity: 0.85;
       }
       .hero-bio {
         color: var(--muted);
-        font-size: 0.97rem;
-        line-height: 1.78;
-        text-align: center;
-        max-width: 540px;
-        margin: 0 auto 32px;
+        font-size: 0.95rem;
+        line-height: 1.8;
+        text-align: left;
+        margin: 0 0 32px;
+        padding: 20px;
+        background: rgba(0, 200, 255, 0.025);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        border-left: 3px solid var(--cyan);
+      }
+      .profile-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 0 0 24px;
       }
 
       /* Platform badges */
+      .badges-label {
+        font-family: "Fira Code", monospace;
+        font-size: 0.68rem;
+        color: var(--muted);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
       .badges {
         display: flex;
-        justify-content: center;
-        gap: 36px;
-        padding-top: 28px;
-        border-top: 1px solid var(--border);
+        justify-content: flex-start;
+        gap: 24px;
+        flex-wrap: wrap;
       }
       .badge {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        gap: 7px;
+        gap: 9px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 16px;
+        transition:
+          border-color 0.25s,
+          box-shadow 0.25s;
+      }
+      .badge:hover {
+        border-color: var(--border-bright);
+        box-shadow: 0 0 14px var(--glow);
       }
       .badge-icon {
-        font-size: 2rem;
+        font-size: 1.5rem;
       }
       .badge-label {
-        font-size: 0.7rem;
+        font-size: 0.78rem;
         font-weight: 700;
         font-family: "Orbitron", sans-serif;
-        color: var(--muted);
-        letter-spacing: 1.5px;
+        color: var(--text);
+        letter-spacing: 1px;
       }
       .badge img.badge-icon {
-        width: 2rem;
-        height: 2rem;
+        width: 1.5rem;
+        height: 1.5rem;
         object-fit: contain;
         display: block;
         transition: all 0.3s ease;
       }
       .badge i.badge-icon {
-        font-size: 2rem;
+        font-size: 1.5rem;
         line-height: 1;
       }
       .ic-android {
@@ -1063,7 +1120,64 @@
             transparent 32%
           ),
           linear-gradient(160deg, #050818 0%, #101633 52%, #050611 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding-top: 40px;
       }
+      .ios-time {
+        font-size: 3.2rem;
+        font-weight: 100;
+        color: rgba(255, 255, 255, 0.92);
+        letter-spacing: -2px;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .ios-date {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.55);
+        letter-spacing: 1.5px;
+      }
+      .ios-notif {
+        margin-top: 12px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 14px;
+        padding: 9px 12px;
+        width: 84%;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        backdrop-filter: blur(8px);
+      }
+      .ios-notif-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 7px;
+        background: linear-gradient(135deg, var(--cyan), var(--cyan2));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65rem;
+        color: #000;
+        flex-shrink: 0;
+      }
+      .ios-notif-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .ios-notif-title {
+        font-size: 0.58rem;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 600;
+      }
+      .ios-notif-body {
+        font-size: 0.52rem;
+        color: rgba(255, 255, 255, 0.42);
+      }
+
       .screen-app {
         background:
           radial-gradient(
@@ -1072,7 +1186,157 @@
             transparent 25%
           ),
           linear-gradient(180deg, #050510 0%, #070714 100%);
+        display: flex;
+        flex-direction: column;
+        padding: 50px 12px 14px;
+        gap: 8px;
       }
+      .app-topbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(0, 200, 255, 0.1);
+        border-radius: 12px;
+      }
+      .app-topbar-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--cyan);
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+      .app-topbar-title {
+        font-family: "Fira Code", monospace;
+        font-size: 0.58rem;
+        color: rgba(255, 255, 255, 0.5);
+        flex: 1;
+      }
+      .app-topbar-icon {
+        color: var(--cyan2);
+        font-size: 0.6rem;
+      }
+      .app-hero-banner {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 200, 255, 0.1),
+          rgba(61, 220, 132, 0.06)
+        );
+        border: 1px solid rgba(0, 200, 255, 0.12);
+        border-radius: 12px;
+        padding: 9px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .app-banner-tag {
+        font-family: "Fira Code", monospace;
+        font-size: 0.46rem;
+        color: var(--cyan);
+        letter-spacing: 1px;
+      }
+      .app-banner-bar {
+        height: 4px;
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.09);
+      }
+      .app-banner-bar.w80 {
+        width: 80%;
+      }
+      .app-banner-bar.w55 {
+        width: 55%;
+        background: rgba(0, 200, 255, 0.18);
+      }
+      .app-chart-area {
+        background: rgba(0, 200, 255, 0.03);
+        border: 1px solid rgba(0, 200, 255, 0.12);
+        border-radius: 12px;
+        padding: 9px;
+        height: 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .chart-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 4px;
+        height: 42px;
+      }
+      .chart-b {
+        flex: 1;
+        border-radius: 3px 3px 0 0;
+        background: linear-gradient(to top, var(--cyan2), var(--cyan));
+        animation: barAnim 1.8s ease-in-out infinite alternate;
+      }
+      .chart-b:nth-child(1) {
+        height: 40%;
+        animation-delay: 0.1s;
+      }
+      .chart-b:nth-child(2) {
+        height: 80%;
+        animation-delay: 0.3s;
+      }
+      .chart-b:nth-child(3) {
+        height: 55%;
+        animation-delay: 0.5s;
+      }
+      .chart-b:nth-child(4) {
+        height: 95%;
+        animation-delay: 0.2s;
+      }
+      .chart-b:nth-child(5) {
+        height: 65%;
+        animation-delay: 0.4s;
+      }
+      @keyframes barAnim {
+        from {
+          transform: scaleY(0.75);
+        }
+        to {
+          transform: scaleY(1);
+        }
+      }
+      .chart-line {
+        height: 2px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 2px;
+      }
+      .app-list-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.025);
+        border-radius: 9px;
+        padding: 6px 9px;
+      }
+      .item-dot {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .item-lines {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .item-line {
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
       .screen-android {
         background:
           radial-gradient(
@@ -1081,6 +1345,32 @@
             transparent 25%
           ),
           linear-gradient(160deg, #041a0f 0%, #020806 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .android-icon {
+        font-size: 4rem;
+        color: var(--green);
+        filter: drop-shadow(0 0 20px var(--green));
+        animation: androidBounce 2s ease-in-out infinite;
+      }
+      @keyframes androidBounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+      .android-label {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.65rem;
+        color: var(--green);
+        letter-spacing: 3px;
       }
       .camera-bump {
         top: 24px;
@@ -1271,7 +1561,14 @@
         height: 2.8rem;
         object-fit: contain;
         display: block;
-        filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.08));
+      }
+      .tech-icon img.flutter-logo {
+        filter: drop-shadow(0 0 10px var(--cyan2))
+          drop-shadow(0 0 22px rgba(79, 168, 255, 0.45));
+      }
+      .tech-icon img.dart-logo {
+        filter: drop-shadow(0 0 10px var(--dart-blue))
+          drop-shadow(0 0 22px rgba(0, 180, 216, 0.45));
       }
 
       /* Custom Flutter icon SVG inline */
@@ -1598,25 +1895,6 @@
         margin-top: 6px;
         opacity: 0.7;
       }
-      /* video play overlay inside phone */
-      .phone-media-play {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(143, 110, 110, 0.28);
-        z-index: 3;
-        cursor: pointer;
-      }
-      .phone-media-play i {
-        font-size: 2.8rem;
-        color: #fff;
-        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.8));
-      }
-      .phone-media-play.hidden {
-        display: none;
-      }
 
       #projects-container {
         display: grid;
@@ -1762,6 +2040,126 @@
         border-color: var(--border-bright);
       }
 
+      /* ===== MEDIA GRID — PROFESSIONAL ===== */
+      .media-section-title {
+        font-family: "Fira Code", monospace;
+        font-size: 0.72rem;
+        color: var(--cyan);
+        letter-spacing: 2px;
+        opacity: 0.7;
+        margin-bottom: 18px;
+        text-transform: uppercase;
+      }
+      .pro-media-grid {
+        display: grid;
+        gap: 14px;
+      }
+      .pro-media-grid.portrait-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      }
+      .pro-media-grid.landscape-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+      .pro-media-grid.video-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+      .pro-media-item {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: #000;
+        cursor: pointer;
+        transition:
+          border-color 0.25s,
+          box-shadow 0.25s,
+          transform 0.25s;
+        display: flex;
+        flex-direction: column;
+      }
+      .pro-media-item:hover {
+        border-color: var(--border-bright);
+        box-shadow: 0 10px 32px var(--glow);
+        transform: translateY(-3px);
+      }
+      .pro-media-thumb {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        background: #000;
+      }
+      .pro-media-thumb.portrait-thumb {
+        aspect-ratio: 9/16;
+      }
+      .pro-media-thumb.landscape-thumb {
+        aspect-ratio: 16/9;
+      }
+      .pro-media-thumb.video-thumb {
+        aspect-ratio: 16/9;
+      }
+      .pro-media-thumb img,
+      .pro-media-thumb iframe {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .pro-media-thumb iframe {
+        border: none;
+        pointer-events: none;
+      }
+      .pro-media-play-btn {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.38);
+        transition: background 0.2s;
+      }
+      .pro-media-item:hover .pro-media-play-btn {
+        background: rgba(0, 0, 0, 0.55);
+      }
+      .pro-media-play-btn i {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: rgba(0, 200, 255, 0.15);
+        border: 2px solid var(--cyan);
+        color: #fff;
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+        transition:
+          transform 0.2s,
+          background 0.2s;
+      }
+      .pro-media-item:hover .pro-media-play-btn i {
+        transform: scale(1.12);
+        background: rgba(0, 200, 255, 0.28);
+      }
+      .pro-media-label {
+        padding: 10px 12px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.7rem;
+        color: var(--muted);
+        background: var(--surface2);
+        border-top: 1px solid var(--border);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: color 0.2s;
+      }
+      .pro-media-item:hover .pro-media-label {
+        color: var(--cyan);
+      }
+      .pro-media-index {
+        color: var(--border-bright);
+        margin-right: 6px;
+      }
+
       /* ===== PROJECT MODAL ===== */
       .modal-overlay {
         display: none;
@@ -1888,60 +2286,6 @@
         border-radius: 2px;
       }
 
-      /* Media grid */
-      .media-grid {
-        display: grid;
-        gap: 16px;
-      }
-      .media-grid.portrait {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      }
-      .media-grid.landscape {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      }
-      .media-item {
-        position: relative;
-        border-radius: 14px;
-        overflow: hidden;
-        border: 1px solid var(--border);
-        cursor: pointer;
-        transition:
-          border-color 0.2s,
-          box-shadow 0.2s,
-          transform 0.2s;
-        background: #000;
-      }
-      .media-item:hover {
-        border-color: var(--border-bright);
-        box-shadow: 0 8px 24px var(--glow);
-        transform: scale(1.02);
-      }
-      .media-item.portrait-item {
-        aspect-ratio: 9/16;
-      }
-      .media-item.landscape-item {
-        aspect-ratio: 16/9;
-      }
-      .media-item img,
-      .media-item video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-      }
-      .media-play-overlay {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0, 0, 0, 0.3);
-      }
-      .media-play-overlay i {
-        font-size: 2.2rem;
-        color: #fff;
-        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8));
-      }
       .empty-tab {
         text-align: center;
         padding: 60px 20px;
@@ -1960,67 +2304,64 @@
         position: fixed;
         inset: 0;
         z-index: 3000;
-        background: rgba(0, 0, 0, 0.95);
+        background: rgba(0, 0, 0, 0.92);
+        backdrop-filter: blur(18px);
         align-items: center;
         justify-content: center;
+        padding: 20px;
+        animation: lbFadeIn 0.22s ease;
+      }
+      @keyframes lbFadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
       .lightbox.open {
         display: flex;
       }
       .lightbox-inner {
         position: relative;
-        max-width: 95vw;
-        max-height: 95vh;
+        width: 85vw;
+        height: 85vh;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        animation: lbScaleIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
       }
-      /* Portrait: phone-like frame */
-      .lightbox-inner.portrait-lb {
-        width: min(390px, 90vw);
-        height: auto;
+      @keyframes lbScaleIn {
+        from {
+          transform: scale(0.88);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
       }
-      /* Landscape: screen-like frame */
-      .lightbox-inner.landscape-lb {
-        width: min(900px, 92vw);
-        height: auto;
-      }
-
-      /* Decorative frame */
-      .lb-frame {
-        position: relative;
-        border-radius: 24px;
-        overflow: hidden;
-        border: 2px solid var(--border-bright);
-        box-shadow:
-          0 0 60px var(--glow),
-          0 0 120px rgba(0, 200, 255, 0.05);
-      }
-      .lb-frame::before {
-        content: attr(data-label);
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        padding: 8px 14px;
-        background: rgba(0, 0, 0, 0.85);
-        font-family: "Fira Code", monospace;
-        font-size: 0.7rem;
-        color: var(--cyan);
-        z-index: 10;
-        border-bottom: 1px solid var(--border);
-        letter-spacing: 1px;
-      }
-      .lb-frame img,
-      .lb-frame video {
-        display: block;
+      .lb-topbar {
         width: 100%;
-        padding-top: 30px; /* space for label */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 0 10px 0;
+        flex-shrink: 0;
+      }
+      .lb-media-name {
+        font-family: "Fira Code", monospace;
+        font-size: 0.76rem;
+        color: var(--cyan);
+        letter-spacing: 1px;
+        opacity: 0.85;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: calc(100% - 60px);
       }
       .lb-close {
-        position: absolute;
-        top: -48px;
-        right: 0;
         width: 38px;
         height: 38px;
         border-radius: 50%;
@@ -2032,35 +2373,102 @@
         align-items: center;
         justify-content: center;
         font-size: 1rem;
-        transition: background 0.2s;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+        flex-shrink: 0;
       }
       .lb-close:hover {
-        background: rgba(255, 50, 50, 0.2);
+        background: rgba(255, 50, 50, 0.28);
+        transform: scale(1.1);
+      }
+      .lb-media-wrap {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 0;
+        position: relative;
+      }
+      /* Decorative frame */
+      .lb-frame {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1.5px solid var(--border-bright);
+        box-shadow:
+          0 0 50px var(--glow),
+          0 0 100px rgba(0, 200, 255, 0.04);
+        max-width: 100%;
+        max-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .lb-frame img,
+      .lb-frame video,
+      .lb-frame iframe {
+        display: block;
+        max-width: 100%;
+        max-height: calc(85vh - 80px);
+        border-radius: 18px;
+        object-fit: contain;
+        border: none;
+      }
+      .lb-frame iframe {
+        width: 75vw;
+        height: calc(75vw * 9 / 16);
+        max-height: calc(85vh - 80px);
       }
       .lb-nav {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        width: 36px;
-        height: 36px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.65);
         border: 1px solid var(--border-bright);
         color: #fff;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: background 0.2s;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+        z-index: 10;
       }
       .lb-nav:hover {
-        background: rgba(0, 200, 255, 0.2);
+        background: rgba(0, 200, 255, 0.22);
+        transform: translateY(-50%) scale(1.1);
       }
       .lb-prev {
-        left: -50px;
+        left: -58px;
       }
       .lb-next {
-        right: -50px;
+        right: -58px;
+      }
+      .lb-counter {
+        font-family: "Fira Code", monospace;
+        font-size: 0.7rem;
+        color: var(--muted);
+        text-align: center;
+        padding-top: 8px;
+        flex-shrink: 0;
+      }
+      @media (max-width: 768px) {
+        .lb-prev {
+          left: -10px;
+        }
+        .lb-next {
+          right: -10px;
+        }
+        .lb-frame iframe {
+          width: 80vw;
+          height: calc(80vw * 9 / 16);
+        }
       }
 
       /* ===== CONTACT ===== */
@@ -2290,27 +2698,31 @@
         <div class="hero-grid reveal">
           <!-- Profile card -->
           <div class="profile-card">
-            <div class="avatar-wrap">
-              <div class="avatar-ring"></div>
-              <div class="avatar-ring-mask"></div>
-              <div class="avatar-inner">
-                <img
-                  id="profile-photo"
-                  src=""
-                  alt="Michael Talaat"
-                  style="display: none"
-                />
-                <i
-                  class="fas fa-user avatar-placeholder"
-                  id="avatar-placeholder"
-                ></i>
+            <div class="profile-header">
+              <div class="avatar-wrap">
+                <div class="avatar-ring"></div>
+                <div class="avatar-ring-mask"></div>
+                <div class="avatar-inner">
+                  <img
+                    id="profile-photo"
+                    src=""
+                    alt="Michael Talaat"
+                    style="display: none"
+                  />
+                  <i
+                    class="fas fa-user avatar-placeholder"
+                    id="avatar-placeholder"
+                  ></i>
+                </div>
+              </div>
+              <div class="profile-header-info">
+                <h1 class="hero-name" id="hero-name">Michael Talaat</h1>
+                <p class="hero-role" id="hero-role">
+                  &lt; Flutter Developer &amp; UI/UX Designer /&gt;
+                </p>
               </div>
             </div>
 
-            <h1 class="hero-name">Michael Talaat</h1>
-            <p class="hero-role">
-              &lt; Flutter Developer &amp; UI/UX Designer /&gt;
-            </p>
             <p class="hero-bio" id="hero-bio">
               Crafting high-performance, pixel-perfect mobile experiences for
               both iOS and Android. I combine Flutter engineering depth with
@@ -2319,6 +2731,9 @@
               interfaces.
             </p>
 
+            <div class="profile-divider"></div>
+
+            <div class="badges-label">// platforms & stack</div>
             <div class="badges">
               <div class="badge">
                 <i class="fab fa-android badge-icon ic-android"></i>
@@ -2362,31 +2777,27 @@
                       <div class="screen-state screen-ios" id="state-ios">
                         <div class="ios-time" id="ios-clock">09:41</div>
                         <div class="ios-date">Tuesday, June 9</div>
-                        <svg
-                          class="ios-logo"
-                          width="40"
-                          height="40"
-                          viewBox="0 0 40 40"
-                          fill="none"
-                        >
-                          <path
-                            d="M20 4C28.837 4 36 11.163 36 20C36 28.837 28.837 36 20 36C11.163 36 4 28.837 4 20C4 11.163 11.163 4 20 4Z"
-                            fill="white"
-                            fill-opacity="0.15"
-                          />
-                          <path
-                            d="M20 8L22 16H30L24 21L26 29L20 24L14 29L16 21L10 16H18L20 8Z"
-                            fill="white"
-                            fill-opacity="0.6"
-                          />
-                        </svg>
+                        <div class="ios-notif">
+                          <div class="ios-notif-icon">
+                            <i class="fas fa-bell"></i>
+                          </div>
+                          <div class="ios-notif-text">
+                            <div class="ios-notif-title">flutter_app · now</div>
+                            <div class="ios-notif-body">Build complete ✓</div>
+                          </div>
+                        </div>
                       </div>
                       <!-- App screen -->
                       <div class="screen-state screen-app" id="state-app">
                         <div class="app-topbar">
                           <div class="app-topbar-dot"></div>
-                          <div class="app-topbar-title">flutter_app</div>
+                          <div class="app-topbar-title">flutter_app.dart</div>
                           <i class="fas fa-wifi app-topbar-icon"></i>
+                        </div>
+                        <div class="app-hero-banner">
+                          <div class="app-banner-tag">// UI_COMPONENT</div>
+                          <div class="app-banner-bar w80"></div>
+                          <div class="app-banner-bar w55"></div>
                         </div>
                         <div class="app-chart-area">
                           <div class="chart-row">
@@ -2406,13 +2817,13 @@
                           <div class="item-lines">
                             <div
                               class="item-line"
-                              style="width: 70%; height: 5px"
+                              style="width: 70%; height: 4px"
                             ></div>
                             <div
                               class="item-line"
                               style="
                                 width: 45%;
-                                height: 4px;
+                                height: 3px;
                                 background: rgba(255, 255, 255, 0.06);
                               "
                             ></div>
@@ -2426,33 +2837,13 @@
                           <div class="item-lines">
                             <div
                               class="item-line"
-                              style="width: 60%; height: 5px"
+                              style="width: 60%; height: 4px"
                             ></div>
                             <div
                               class="item-line"
                               style="
                                 width: 35%;
-                                height: 4px;
-                                background: rgba(255, 255, 255, 0.06);
-                              "
-                            ></div>
-                          </div>
-                        </div>
-                        <div class="app-list-item">
-                          <div
-                            class="item-dot"
-                            style="background: #a78bfa"
-                          ></div>
-                          <div class="item-lines">
-                            <div
-                              class="item-line"
-                              style="width: 80%; height: 5px"
-                            ></div>
-                            <div
-                              class="item-line"
-                              style="
-                                width: 50%;
-                                height: 4px;
+                                height: 3px;
                                 background: rgba(255, 255, 255, 0.06);
                               "
                             ></div>
@@ -2591,7 +2982,11 @@
               <i class="fas fa-mobile-screen-button"></i>
             </div>
             <div class="tech-icon">
-              <img src="data/flutterAndDart/flutter.png" alt="Flutter" />
+              <img
+                src="data/flutterAndDart/flutter.png"
+                alt="Flutter"
+                class="flutter-logo"
+              />
             </div>
             <h3 class="tech-name">Flutter</h3>
             <p class="tech-desc">
@@ -2602,7 +2997,11 @@
           <div class="tech-card">
             <div class="tech-watermark"><i class="fas fa-code"></i></div>
             <div class="tech-icon">
-              <img src="data/flutterAndDart/dart.png" alt="Dart" />
+              <img
+                src="data/flutterAndDart/dart.png"
+                alt="Dart"
+                class="dart-logo"
+              />
             </div>
             <h3 class="tech-name">Dart</h3>
             <p class="tech-desc">
@@ -2881,34 +3280,50 @@
 
     <!-- ===== LIGHTBOX ===== -->
     <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-      <div class="lightbox-inner" id="lb-inner">
-        <button class="lb-close" onclick="closeLightboxBtn()">
-          <i class="fas fa-times"></i>
-        </button>
-        <button
-          class="lb-nav lb-prev"
-          id="lb-prev"
-          onclick="
-            lbNav(-1);
-            event.stopPropagation();
-          "
-        >
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <div class="lb-frame" id="lb-frame" data-label="// media_viewer.dart">
-          <img id="lb-img" src="" alt="" style="display: none" />
-          <video id="lb-vid" controls style="display: none"></video>
+      <div
+        class="lightbox-inner"
+        id="lb-inner"
+        onclick="event.stopPropagation()"
+      >
+        <div class="lb-topbar">
+          <span class="lb-media-name" id="lb-media-name">// media</span>
+          <button class="lb-close" onclick="closeLightboxBtn()">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
-        <button
-          class="lb-nav lb-next"
-          id="lb-next"
-          onclick="
-            lbNav(1);
-            event.stopPropagation();
-          "
-        >
-          <i class="fas fa-chevron-right"></i>
-        </button>
+        <div class="lb-media-wrap">
+          <button
+            class="lb-nav lb-prev"
+            id="lb-prev"
+            onclick="
+              lbNav(-1);
+              event.stopPropagation();
+            "
+          >
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <div class="lb-frame" id="lb-frame">
+            <img id="lb-img" src="" alt="" style="display: none" />
+            <video id="lb-vid" controls style="display: none"></video>
+            <iframe
+              id="lb-iframe"
+              src=""
+              style="display: none"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <button
+            class="lb-nav lb-next"
+            id="lb-next"
+            onclick="
+              lbNav(1);
+              event.stopPropagation();
+            "
+          >
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+        <div class="lb-counter" id="lb-counter"></div>
       </div>
     </div>
 
@@ -3190,11 +3605,16 @@
         const profile = data.profile || {};
 
         if (profile.name) {
-          document.querySelector(".hero-name").textContent = profile.name;
+          const el =
+            document.getElementById("hero-name") ||
+            document.querySelector(".hero-name");
+          if (el) el.textContent = profile.name;
         }
         if (profile.title) {
-          document.querySelector(".hero-role").textContent =
-            `< ${profile.title} />`;
+          const el =
+            document.getElementById("hero-role") ||
+            document.querySelector(".hero-role");
+          if (el) el.textContent = `< ${profile.title} />`;
         }
         if (profile.photo) {
           const img = document.getElementById("profile-photo");
@@ -3315,115 +3735,82 @@
         if (tab === "videos") renderMediaGrid("videos");
       }
 
-      function isPortrait(url) {
-        // Heuristic: check for keywords; default portrait for unknown
-        const l = url.toLowerCase();
-        if (
-          l.includes("landscape") ||
-          l.includes("wide") ||
-          l.includes("screen") ||
-          l.includes("tablet")
-        )
-          return false;
-        return true;
-      }
-
-      // ===== PHONE MODAL MEDIA =====
-      let phoneMediaList = [];
-      let phoneMediaIdx = 0;
-      let phoneMediaType = "images";
+      // ===== PROFESSIONAL MEDIA GRID =====
+      let proMediaList = [];
+      let proMediaType = "images";
 
       function renderMediaGrid(type) {
         const items = currentProject ? currentProject[type] || [] : [];
         const gridId = type === "images" ? "images-grid" : "videos-grid";
         const grid = document.getElementById(gridId);
-        phoneMediaType = type;
+        proMediaType = type;
 
         if (!items.length) {
           grid.innerHTML = `<div class="empty-tab"><i class="fas fa-${type === "images" ? "images" : "play-circle"}"></i><p>No ${type} added yet</p></div>`;
           return;
         }
 
-        phoneMediaList = items;
-        phoneMediaIdx = 0;
-        currentMediaList = items; // keep lightbox compat
+        proMediaList = items;
+        currentMediaList = items;
 
-        grid.innerHTML = `
-          <div class="phone-modal-scene">
-            <div style="display:flex;flex-direction:column;align-items:center;">
-              <div class="phone-modal-wrap">
-                <div class="phone-modal-3d" id="phone-modal-3d">
-                  <div class="phone-side-left"></div>
-                  <div class="phone-side-right"></div>
-                  <div class="phone-modal-face">
-                    <div class="phone-modal-body">
-                      <div class="phone-modal-island"></div>
-                      <div class="phone-modal-screen" id="phone-modal-screen">
-                        <!-- content injected -->
-                      </div>
-                      <div class="phone-modal-homebar"></div>
+        if (type === "images") {
+          grid.innerHTML = `
+            <div class="pro-media-grid portrait-grid" id="pro-img-grid">
+              ${items
+                .map((item, idx) => {
+                  const name =
+                    typeof item === "object" && item.name
+                      ? item.name
+                      : `screenshot_${idx + 1}`;
+                  const url =
+                    typeof item === "object" && item.url ? item.url : item;
+                  return `
+                <div class="pro-media-item" onclick="openLightbox(${idx})">
+                  <div class="pro-media-thumb portrait-thumb">
+                    <img src="${url}" alt="${name}" loading="lazy" />
+                    <div class="pro-media-play-btn" style="background:rgba(0,0,0,0.18)">
+                      <i class="fas fa-expand" style="font-size:1.1rem;width:38px;height:38px;border-width:1.5px"></i>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div class="phone-modal-nav" style="margin-top:18px">
-                <button class="phone-nav-btn" id="phone-prev-btn" onclick="phoneNav(-1)"><i class="fas fa-chevron-left"></i></button>
-                <span class="phone-modal-counter" id="phone-counter">1 / ${items.length}</span>
-                <button class="phone-nav-btn" id="phone-next-btn" onclick="phoneNav(1)"><i class="fas fa-chevron-right"></i></button>
-              </div>
-              <div class="phone-modal-caption" id="phone-caption">// ${type === "images" ? "screenshot" : "video"}_viewer.dart</div>
-            </div>
-          </div>`;
-
-        renderPhoneMedia();
-      }
-
-      function renderPhoneMedia() {
-        const url = phoneMediaList[phoneMediaIdx];
-        const screen = document.getElementById("phone-modal-screen");
-        if (!screen) return;
-        const isVideo =
-          /\.(mp4|webm|mov|avi)$/i.test(url) || url.includes("video");
-        if (isVideo) {
-          screen.innerHTML = `
-            <video id="phone-vid" src="${url}" style="width:100%;height:100%;object-fit:cover;display:block;" playsinline loop></video>
-            <div class="phone-media-play" id="phone-play-overlay" onclick="togglePhoneVideo()">
-              <i class="fas fa-play"></i>
+                  <div class="pro-media-label"><span class="pro-media-index">${String(idx + 1).padStart(2, "0")}.</span>${name}</div>
+                </div>`;
+                })
+                .join("")}
             </div>`;
         } else {
-          screen.innerHTML = `<img src="${url}" alt="screenshot" style="width:100%;height:100%;object-fit:cover;display:block;" onclick="openLightbox(${phoneMediaIdx})" />`;
-        }
-        const counter = document.getElementById("phone-counter");
-        if (counter)
-          counter.textContent = `${phoneMediaIdx + 1} / ${phoneMediaList.length}`;
-        const prev = document.getElementById("phone-prev-btn");
-        const next = document.getElementById("phone-next-btn");
-        if (prev) prev.disabled = phoneMediaIdx === 0;
-        if (next) next.disabled = phoneMediaIdx === phoneMediaList.length - 1;
-      }
-
-      function phoneNav(dir) {
-        const next = phoneMediaIdx + dir;
-        if (next < 0 || next >= phoneMediaList.length) return;
-        // pause any playing video
-        const vid = document.getElementById("phone-vid");
-        if (vid) {
-          vid.pause();
-        }
-        phoneMediaIdx = next;
-        renderPhoneMedia();
-      }
-
-      function togglePhoneVideo() {
-        const vid = document.getElementById("phone-vid");
-        const overlay = document.getElementById("phone-play-overlay");
-        if (!vid) return;
-        if (vid.paused) {
-          vid.play();
-          overlay.classList.add("hidden");
-        } else {
-          vid.pause();
-          overlay.classList.remove("hidden");
+          grid.innerHTML = `
+            <div class="pro-media-grid video-grid" id="pro-vid-grid">
+              ${items
+                .map((item, idx) => {
+                  const name =
+                    typeof item === "object" && item.name
+                      ? item.name
+                      : `video_${idx + 1}`;
+                  const url =
+                    typeof item === "object" && item.url ? item.url : item;
+                  const isEmbed =
+                    url.includes("drive.google.com") ||
+                    url.includes("youtube") ||
+                    url.includes("embed");
+                  return `
+                <div class="pro-media-item" onclick="openLightbox(${idx})">
+                  <div class="pro-media-thumb video-thumb">
+                    ${
+                      isEmbed
+                        ? `<div style="width:100%;height:100%;background:linear-gradient(135deg,#06061a,#020208);display:flex;align-items:center;justify-content:center;">
+                           <i class="fas fa-film" style="font-size:3rem;color:var(--border-bright)"></i>
+                         </div>`
+                        : `<video src="${url}" style="width:100%;height:100%;object-fit:cover" muted></video>`
+                    }
+                    <div class="pro-media-play-btn">
+                      <i class="fas fa-play" style="padding-left:3px"></i>
+                    </div>
+                  </div>
+                  <div class="pro-media-label"><span class="pro-media-index">${String(idx + 1).padStart(2, "0")}.</span>${name}</div>
+                </div>`;
+                })
+                .join("")}
+            </div>`;
         }
       }
 
@@ -3434,65 +3821,104 @@
         document.getElementById("lightbox").classList.add("open");
         document.body.style.overflow = "hidden";
       }
+
       function renderLbItem() {
-        const url = currentMediaList[currentLbIndex];
-        const portrait = isPortrait(url);
-        const inner = document.getElementById("lb-inner");
-        inner.className =
-          "lightbox-inner " + (portrait ? "portrait-lb" : "landscape-lb");
+        const rawItem = currentMediaList[currentLbIndex];
+        const isObj = typeof rawItem === "object" && rawItem !== null;
+        const url = isObj ? rawItem.url : rawItem;
+        const name = isObj ? rawItem.name : null;
+        const isEmbed =
+          url && (url.includes("drive.google.com") || url.includes("embed"));
+        const isVideo =
+          isEmbed ||
+          /\.(mp4|webm|mov|avi)$/i.test(url || "") ||
+          (url || "").includes("video");
+        const isIframe = isEmbed;
+
         const img = document.getElementById("lb-img");
         const vid = document.getElementById("lb-vid");
-        const isVideo =
-          /\.(mp4|webm|mov|avi)$/i.test(url) || url.includes("video");
-        if (isVideo) {
+        const iframe = document.getElementById("lb-iframe");
+        const nameEl = document.getElementById("lb-media-name");
+        const counter = document.getElementById("lb-counter");
+
+        // Hide all
+        img.style.display = "none";
+        vid.style.display = "none";
+        iframe.style.display = "none";
+        vid.src = "";
+        iframe.src = "";
+
+        if (isIframe) {
+          iframe.src = url;
+          iframe.style.display = "block";
+        } else if (isVideo) {
           vid.src = url;
           vid.style.display = "block";
-          img.style.display = "none";
-          document
-            .getElementById("lb-frame")
-            .setAttribute("data-label", "// video_player.dart");
         } else {
           img.src = url;
           img.style.display = "block";
-          vid.style.display = "none";
-          vid.src = "";
-          document
-            .getElementById("lb-frame")
-            .setAttribute("data-label", "// image_viewer.dart");
         }
-        // Nav visibility
+
+        // Show name
+        const label = name
+          ? `// ${name}`
+          : isVideo
+            ? "// video_player.dart"
+            : "// image_viewer.dart";
+        nameEl.textContent = label;
+
+        counter.textContent = `${currentLbIndex + 1} / ${currentMediaList.length}`;
+
         document.getElementById("lb-prev").style.opacity =
           currentLbIndex > 0 ? "1" : "0.2";
         document.getElementById("lb-next").style.opacity =
           currentLbIndex < currentMediaList.length - 1 ? "1" : "0.2";
       }
+
       function lbNav(dir) {
         const next = currentLbIndex + dir;
         if (next < 0 || next >= currentMediaList.length) return;
+        // stop video/iframe before nav
+        const vid = document.getElementById("lb-vid");
+        if (vid) {
+          vid.pause();
+          vid.src = "";
+        }
+        const iframe = document.getElementById("lb-iframe");
+        if (iframe) iframe.src = "";
         currentLbIndex = next;
         renderLbItem();
       }
+
       function closeLightbox(e) {
+        // clicking on backdrop closes
         if (e.target === document.getElementById("lightbox"))
           closeLightboxBtn();
       }
+
       function closeLightboxBtn() {
         document.getElementById("lightbox").classList.remove("open");
-        document.getElementById("lb-vid").pause &&
-          document.getElementById("lb-vid").pause();
-        document.getElementById("lb-vid").src = "";
-        // Only remove overflow if modal is also closed
+        const vid = document.getElementById("lb-vid");
+        if (vid) {
+          vid.pause && vid.pause();
+          vid.src = "";
+        }
+        const iframe = document.getElementById("lb-iframe");
+        if (iframe) iframe.src = "";
         if (
           !document.getElementById("project-modal").classList.contains("open")
         )
           document.body.style.overflow = "";
       }
       document.addEventListener("keydown", (e) => {
+        const lbOpen = document
+          .getElementById("lightbox")
+          .classList.contains("open");
         if (e.key === "Escape") {
-          closeLightboxBtn();
-          closeModal();
+          if (lbOpen) closeLightboxBtn();
+          else closeModal();
         }
-        if (document.getElementById("lightbox").classList.contains("open")) {
+        if (lbOpen) {
           if (e.key === "ArrowLeft") lbNav(-1);
           if (e.key === "ArrowRight") lbNav(1);
         }
@@ -3503,4 +3929,3 @@
     </script>
   </body>
 </html>
-/* Created by Michael Talaat - Flutter Developer & UI/UX Designer */
