@@ -10,7 +10,7 @@
       "id": 1,
       "name": "Quick Bite",
       "cover": "data/project1/coverQB.jpg",
-      "description": "Quick Byte is a fast and modern food ordering application designed to deliver a smooth user experience for browsing meals, placing orders, and tracking deliveries in real time. It includes a powerful admin panel that allows full control over products, orders, pricing, and analytics. Built with a focus on speed, usability, and scalability, Quick Byte provides an efficient bridge between customers and food services.",
+      "description": "Quick Bite is a fast and modern food ordering application designed to deliver a smooth user experience for browsing meals, placing orders, and tracking deliveries in real time. It includes a powerful admin panel that allows full control over products, orders, pricing, and analytics. Built with a focus on speed, usability, and scalability, Quick Bite provides an efficient bridge between customers and food services.",
       "technologies": [
         "Flutter",
         "Dart",
@@ -19,19 +19,24 @@
         "Push Notifications"
       ],
       "images": [
-        "data/project1/QB1.jpg",
-        "data/project1/QB2.jpg",
-        "data/project1/QB3.jpg",
-        "data/project1/QB4.jpg",
-        "data/project1/QB5.jpg",
-        "data/project1/QB6.jpg",
-        "data/project1/QB7.jpg",
-        "data/project1/QB8.jpg",
-        "data/project1/QB9.jpg",
-        "data/project1/QB10.jpg",
-        "data/project1/QB11.jpg"
+        { "url": "data/project1/QB1.jpg",  "name": "Splash Screen" },
+        { "url": "data/project1/QB2.jpg",  "name": "Home Screen" },
+        { "url": "data/project1/QB3.jpg",  "name": "Food Details Screen" },
+        { "url": "data/project1/QB4.jpg",  "name": "Offers Screen" },
+        { "url": "data/project1/QB5.jpg",  "name": "Favorites Screen" },
+        { "url": "data/project1/QB6.jpg",  "name": "Cart Screen" },
+        { "url": "data/project1/QB7.jpg",  "name": "Checkout Screen" },
+        { "url": "data/project1/QB8.jpg",  "name": "Admin Login Screen" },
+        { "url": "data/project1/QB9.jpg",  "name": "Admin Dashboard Screen" },
+        { "url": "data/project1/QB10.jpg", "name": "Orders Management Screen" },
+        { "url": "data/project1/QB11.jpg", "name": "Order Details Screen" }
       ],
-      "videos": ["https://drive.google.com/file/d/1ID5wnedSFqPm1rhRb1cNHf01nNzOynSi/preview"]
+      "videos": [
+        {
+          "url": "https://drive.google.com/file/d/1ID5wnedSFqPm1rhRb1cNHf01nNzOynSi/preview",
+          "name": "App Demo — Full Walkthrough"
+        }
+      ]
     }
   ]
 }
