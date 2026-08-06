@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control Panel · Dashboard</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Orbitron:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../config.js"></script>
+    <style>
+      :root {
+        --bg: #020208;
+        --surface: rgba(8, 8, 24, 0.75);
+        --surface2: rgba(12, 12, 32, 0.9);
+        --border: rgba(0, 200, 255, 0.14);
+        --border-bright: rgba(0, 200, 255, 0.4);
+        --text: #f0f4ff;
+        --muted: #6b7fa3;
+        --cyan: #00c8ff;
+        --green: #3ddc84;
+        --red: #ff4d4d;
+        --glow: rgba(0, 200, 255, 0.18);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Space Grotesk", sans-serif;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 28px;
+        background: var(--surface2);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(20px);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 700;
+        letter-spacing: 1px;
+        font-size: 0.95rem;
+      }
+      .brand i {
+        color: var(--cyan);
+      }
+      #signout-btn {
+        background: rgba(255, 77, 77, 0.08);
+        border: 1px solid rgba(255, 77, 77, 0.3);
+        color: var(--red);
+        padding: 9px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-family: "Space Grotesk", sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 28px 20px 80px;
+      }
+      .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 26px;
+        flex-wrap: wrap;
+      }
+      .tab-btn {
+        padding: 10px 18px;
+        border-radius: 100px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 0.86rem;
+        font-family: "Space Grotesk", sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+      }
+      .tab-btn.active {
+        color: var(--text);
+        border-color: var(--border-bright);
+        background: linear-gradient(90deg, rgba(0, 200, 255, 0.12), rgba(61, 220, 132, 0.1));
+      }
+      .badge-count {
+        background: var(--cyan);
+        color: #04101a;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 1px 7px;
+        border-radius: 100px;
+      }
+      .panel {
+        display: none;
+      }
+      .panel.active {
+        display: block;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 28px;
+        backdrop-filter: blur(20px);
+        margin-bottom: 20px;
+      }
+      .card h2 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1rem;
+        letter-spacing: 0.6px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .card h2 i {
+        color: var(--cyan);
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 640px) {
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+      .field {
+        margin-bottom: 16px;
+      }
+      .field.full {
+        grid-column: 1 / -1;
+      }
+      label {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 7px;
+      }
+      input,
+      textarea {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 11px 14px;
+        color: var(--text);
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      input:focus,
+      textarea:focus {
+        border-color: var(--border-bright);
+        box-shadow: 0 0 0 3px var(--glow);
+      }
+      .toggle-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      .photo-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+      .photo-preview {
+        width: 74px;
+        height: 74px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--border-bright);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .btn {
+        padding: 11px 20px;
+        border-radius: 11px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.87rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .btn-primary {
+        color: #04101a;
+        background: linear-gradient(90deg, var(--cyan), var(--green));
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 26px var(--glow);
+      }
+      .btn-ghost {
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+      .btn-danger {
+        background: rgba(255, 77, 77, 0.1);
+        color: var(--red);
+        border: 1px solid rgba(255, 77, 77, 0.35);
+      }
+      .btn-small {
+        padding: 7px 13px;
+        font-size: 0.78rem;
+      }
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .save-status {
+        margin-left: 12px;
+        font-size: 0.82rem;
+        color: var(--green);
+        display: none;
+      }
+      .project-item {
+        display: flex;
+        gap: 16px;
+        padding: 16px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        margin-bottom: 12px;
+        align-items: flex-start;
+      }
+      .project-cover {
+        width: 64px;
+        height: 64px;
+        border-radius: 10px;
+        object-fit: cover;
+        background: rgba(255, 255, 255, 0.04);
+        flex-shrink: 0;
+      }
+      .project-item .meta {
+        flex: 1;
+        min-width: 0;
+      }
+      .project-item h4 {
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+      }
+      .project-item p {
+        color: var(--muted);
+        font-size: 0.82rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .project-item .actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+      .msg-item {
+        padding: 16px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        margin-bottom: 12px;
+      }
+      .msg-item.unread {
+        border-color: var(--border-bright);
+        background: rgba(0, 200, 255, 0.04);
+      }
+      .msg-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .msg-top strong {
+        font-size: 0.92rem;
+      }
+      .msg-top span {
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-family: "Fira Code", monospace;
+      }
+      .msg-body {
+        font-size: 0.88rem;
+        color: var(--text);
+        line-height: 1.5;
+        margin-bottom: 10px;
+        white-space: pre-wrap;
+      }
+      .empty-state {
+        text-align: center;
+        color: var(--muted);
+        padding: 40px 20px;
+        font-size: 0.88rem;
+      }
+      .tech-chip-input {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-top: -10px;
+        margin-bottom: 16px;
+      }
+      #toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: var(--surface2);
+        border: 1px solid var(--border-bright);
+        padding: 12px 22px;
+        border-radius: 100px;
+        font-size: 0.85rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s;
+        z-index: 999;
+      }
+      #toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand"><i class="fas fa-shield-halved"></i> Control Panel</div>
+      <button id="signout-btn"><i class="fas fa-right-from-bracket"></i> Sign Out</button>
+    </header>
+
+    <div class="wrap">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="profile"><i class="fas fa-user"></i> Profile</button>
+        <button class="tab-btn" data-tab="projects"><i class="fas fa-diagram-project"></i> Projects</button>
+        <button class="tab-btn" data-tab="messages">
+          <i class="fas fa-envelope"></i> Messages <span class="badge-count" id="msg-count" style="display:none">0</span>
+        </button>
+      </div>
+
+      <!-- PROFILE PANEL -->
+      <div class="panel active" id="panel-profile">
+        <div class="card">
+          <h2><i class="fas fa-id-badge"></i> Public Profile</h2>
+
+          <div class="photo-row">
+            <img class="photo-preview" id="photo-preview" src="" alt="" />
+            <div>
+              <input type="file" id="photo-file" accept="image/*" />
+              <div class="tech-chip-input">Uploads to your Supabase storage bucket</div>
+            </div>
+          </div>
+
+          <div class="toggle-row">
+            <input type="checkbox" id="p-available" style="width:18px;height:18px" />
+            <label for="p-available" style="margin:0;text-transform:none;font-size:0.86rem;color:var(--text)">Show "Available for new projects" badge</label>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="p-name">Full Name</label>
+              <input type="text" id="p-name" />
+            </div>
+            <div class="field">
+              <label for="p-title">Title / Role</label>
+              <input type="text" id="p-title" />
+            </div>
+            <div class="field full">
+              <label for="p-bio">Bio</label>
+              <textarea id="p-bio" rows="4"></textarea>
+            </div>
+            <div class="field">
+              <label for="p-email">Email</label>
+              <input type="email" id="p-email" />
+            </div>
+            <div class="field">
+              <label for="p-whatsapp">WhatsApp (digits only, with country code)</label>
+              <input type="text" id="p-whatsapp" placeholder="201277573021" />
+            </div>
+            <div class="field">
+              <label for="p-linkedin">LinkedIn URL</label>
+              <input type="text" id="p-linkedin" />
+            </div>
+            <div class="field">
+              <label for="p-github">GitHub URL</label>
+              <input type="text" id="p-github" />
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="save-profile-btn">
+            <i class="fas fa-floppy-disk"></i> Save Profile
+          </button>
+          <span class="save-status" id="profile-save-status"><i class="fas fa-check"></i> Saved</span>
+        </div>
+      </div>
+
+      <!-- PROJECTS PANEL -->
+      <div class="panel" id="panel-projects">
+        <div class="card">
+          <h2><i class="fas fa-plus"></i> Add / Edit Project</h2>
+          <input type="hidden" id="proj-id" />
+          <div class="grid-2">
+            <div class="field full">
+              <label for="proj-name">Project Name</label>
+              <input type="text" id="proj-name" />
+            </div>
+            <div class="field full">
+              <label for="proj-desc">Description</label>
+              <textarea id="proj-desc" rows="3"></textarea>
+            </div>
+            <div class="field full">
+              <label for="proj-tech">Technologies (comma separated)</label>
+              <input type="text" id="proj-tech" placeholder="Flutter, Dart, Firebase" />
+            </div>
+            <div class="field">
+              <label for="proj-cover-file">Cover Image</label>
+              <input type="file" id="proj-cover-file" accept="image/*" />
+            </div>
+            <div class="field">
+              <label for="proj-images-file">Screenshots (multiple)</label>
+              <input type="file" id="proj-images-file" accept="image/*" multiple />
+            </div>
+          </div>
+          <button class="btn btn-primary" id="save-project-btn">
+            <i class="fas fa-floppy-disk"></i> <span id="save-project-label">Add Project</span>
+          </button>
+          <button class="btn btn-ghost" id="cancel-edit-btn" style="display:none">Cancel Edit</button>
+        </div>
+
+        <div class="card">
+          <h2><i class="fas fa-list"></i> Existing Projects</h2>
+          <div id="projects-list"></div>
+        </div>
+      </div>
+
+      <!-- MESSAGES PANEL -->
+      <div class="panel" id="panel-messages">
+        <div class="card">
+          <h2><i class="fas fa-inbox"></i> Contact Messages</h2>
+          <div id="messages-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+      const supa =
+        window.SUPABASE_URL &&
+        window.SUPABASE_ANON_KEY &&
+        window.SUPABASE_URL !== "YOUR_SUPABASE_URL"
+          ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY)
+          : null;
+
+      function toast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 2400);
+      }
+
+      // ---- AUTH GUARD ----
+      (async () => {
+        if (!supa) {
+          toast("Supabase not configured — edit config.js");
+          return;
+        }
+        const { data } = await supa.auth.getSession();
+        if (!data.session) {
+          window.location.href = "./index.html";
+          return;
+        }
+        init();
+      })();
+
+      document.getElementById("signout-btn").addEventListener("click", async () => {
+        if (supa) await supa.auth.signOut();
+        window.location.href = "./index.html";
+      });
+
+      // ---- TABS ----
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+          document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+          btn.classList.add("active");
+          document.getElementById("panel-" + btn.dataset.tab).classList.add("active");
+        });
+      });
+
+      let editingProjectId = null;
+
+      async function init() {
+        await loadProfile();
+        await loadProjects();
+        await loadMessages();
+      }
+
+      // ---- FILE UPLOAD HELPER ----
+      async function uploadFile(file, folder) {
+        const ext = file.name.split(".").pop();
+        const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const { error } = await supa.storage.from("portfolio").upload(path, file, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+        if (error) throw error;
+        const { data } = supa.storage.from("portfolio").getPublicUrl(path);
+        return data.publicUrl;
+      }
+
+      // ---- PROFILE ----
+      async function loadProfile() {
+        const { data, error } = await supa.from("profile").select("*").eq("id", 1).maybeSingle();
+        if (error || !data) return;
+        document.getElementById("p-name").value = data.name || "";
+        document.getElementById("p-title").value = data.title || "";
+        document.getElementById("p-bio").value = data.bio || "";
+        document.getElementById("p-email").value = data.email || "";
+        document.getElementById("p-whatsapp").value = data.whatsapp || "";
+        document.getElementById("p-linkedin").value = data.linkedin || "";
+        document.getElementById("p-github").value = data.github || "";
+        document.getElementById("p-available").checked = data.available !== false;
+        if (data.photo_url) document.getElementById("photo-preview").src = data.photo_url;
+      }
+
+      document.getElementById("photo-file").addEventListener("change", (e) => {
+        const f = e.target.files[0];
+        if (f) document.getElementById("photo-preview").src = URL.createObjectURL(f);
+      });
+
+      document.getElementById("save-profile-btn").addEventListener("click", async () => {
+        const btn = document.getElementById("save-profile-btn");
+        btn.disabled = true;
+        try {
+          let photoUrl = document.getElementById("photo-preview").src;
+          const file = document.getElementById("photo-file").files[0];
+          if (file) photoUrl = await uploadFile(file, "profile");
+
+          const payload = {
+            id: 1,
+            name: document.getElementById("p-name").value.trim(),
+            title: document.getElementById("p-title").value.trim(),
+            bio: document.getElementById("p-bio").value.trim(),
+            email: document.getElementById("p-email").value.trim(),
+            whatsapp: document.getElementById("p-whatsapp").value.trim(),
+            linkedin: document.getElementById("p-linkedin").value.trim(),
+            github: document.getElementById("p-github").value.trim(),
+            available: document.getElementById("p-available").checked,
+            photo_url: photoUrl,
+            updated_at: new Date().toISOString(),
+          };
+          const { error } = await supa.from("profile").upsert(payload);
+          if (error) throw error;
+
+          const statusEl = document.getElementById("profile-save-status");
+          statusEl.style.display = "inline";
+          setTimeout(() => (statusEl.style.display = "none"), 2000);
+          toast("Profile saved");
+        } catch (err) {
+          console.error(err);
+          toast("Failed to save: " + (err.message || "unknown error"));
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      // ---- PROJECTS ----
+      async function loadProjects() {
+        const { data, error } = await supa
+          .from("projects")
+          .select("*")
+          .order("sort_order", { ascending: true });
+        const list = document.getElementById("projects-list");
+        if (error || !data || !data.length) {
+          list.innerHTML = '<div class="empty-state">No projects yet. Add your first one above.</div>';
+          return;
+        }
+        list.innerHTML = data
+          .map(
+            (p) => `
+          <div class="project-item">
+            <img class="project-cover" src="${p.cover || ""}" alt="" onerror="this.style.opacity=0" />
+            <div class="meta">
+              <h4>${escapeHtml(p.name)}</h4>
+              <p>${escapeHtml(p.description || "")}</p>
+            </div>
+            <div class="actions">
+              <button class="btn btn-ghost btn-small" onclick="editProject('${p.id}')"><i class="fas fa-pen"></i></button>
+              <button class="btn btn-danger btn-small" onclick="deleteProject('${p.id}')"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>`,
+          )
+          .join("");
+        window.__projects = data;
+      }
+
+      function escapeHtml(s) {
+        return String(s || "").replace(/[&<>"']/g, (c) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[c]);
+      }
+
+      window.editProject = function (id) {
+        const p = (window.__projects || []).find((x) => x.id === id);
+        if (!p) return;
+        editingProjectId = id;
+        document.getElementById("proj-id").value = id;
+        document.getElementById("proj-name").value = p.name || "";
+        document.getElementById("proj-desc").value = p.description || "";
+        document.getElementById("proj-tech").value = (p.technologies || []).join(", ");
+        document.getElementById("save-project-label").textContent = "Update Project";
+        document.getElementById("cancel-edit-btn").style.display = "inline-flex";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+
+      document.getElementById("cancel-edit-btn").addEventListener("click", resetProjectForm);
+
+      function resetProjectForm() {
+        editingProjectId = null;
+        document.getElementById("proj-id").value = "";
+        document.getElementById("proj-name").value = "";
+        document.getElementById("proj-desc").value = "";
+        document.getElementById("proj-tech").value = "";
+        document.getElementById("proj-cover-file").value = "";
+        document.getElementById("proj-images-file").value = "";
+        document.getElementById("save-project-label").textContent = "Add Project";
+        document.getElementById("cancel-edit-btn").style.display = "none";
+      }
+
+      window.deleteProject = async function (id) {
+        if (!confirm("Delete this project?")) return;
+        const { error } = await supa.from("projects").delete().eq("id", id);
+        if (error) return toast("Delete failed");
+        toast("Project deleted");
+        loadProjects();
+      };
+
+      document.getElementById("save-project-btn").addEventListener("click", async () => {
+        const btn = document.getElementById("save-project-btn");
+        const name = document.getElementById("proj-name").value.trim();
+        if (!name) return toast("Project name is required");
+        btn.disabled = true;
+        try {
+          const tech = document
+            .getElementById("proj-tech")
+            .value.split(",")
+            .map((t) => t.trim())
+            .filter(Boolean);
+
+          const payload = {
+            name,
+            description: document.getElementById("proj-desc").value.trim(),
+            technologies: tech,
+          };
+
+          const coverFile = document.getElementById("proj-cover-file").files[0];
+          if (coverFile) payload.cover = await uploadFile(coverFile, "projects/covers");
+
+          const imgFiles = Array.from(document.getElementById("proj-images-file").files || []);
+          if (imgFiles.length) {
+            const uploaded = [];
+            for (const f of imgFiles) {
+              const url = await uploadFile(f, "projects/images");
+              uploaded.push({ name: f.name, url });
+            }
+            payload.images = uploaded;
+          }
+
+          if (editingProjectId) {
+            const { error } = await supa.from("projects").update(payload).eq("id", editingProjectId);
+            if (error) throw error;
+            toast("Project updated");
+          } else {
+            const { error } = await supa.from("projects").insert([payload]);
+            if (error) throw error;
+            toast("Project added");
+          }
+          resetProjectForm();
+          loadProjects();
+        } catch (err) {
+          console.error(err);
+          toast("Failed: " + (err.message || "unknown error"));
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      // ---- MESSAGES ----
+      async function loadMessages() {
+        const { data, error } = await supa
+          .from("messages")
+          .select("*")
+          .order("created_at", { ascending: false });
+        const list = document.getElementById("messages-list");
+        const countEl = document.getElementById("msg-count");
+        if (error || !data || !data.length) {
+          list.innerHTML = '<div class="empty-state">No messages yet.</div>';
+          countEl.style.display = "none";
+          return;
+        }
+        const unread = data.filter((m) => !m.is_read).length;
+        if (unread) {
+          countEl.style.display = "inline-block";
+          countEl.textContent = unread;
+        } else {
+          countEl.style.display = "none";
+        }
+        list.innerHTML = data
+          .map(
+            (m) => `
+          <div class="msg-item ${m.is_read ? "" : "unread"}">
+            <div class="msg-top">
+              <strong>${escapeHtml(m.name)} &lt;${escapeHtml(m.email)}&gt;</strong>
+              <span>${new Date(m.created_at).toLocaleString()}</span>
+            </div>
+            <div class="msg-body">${escapeHtml(m.message)}</div>
+            <div class="actions" style="display:flex;gap:8px">
+              ${!m.is_read ? `<button class="btn btn-ghost btn-small" onclick="markRead('${m.id}')"><i class="fas fa-check"></i> Mark Read</button>` : ""}
+              <button class="btn btn-danger btn-small" onclick="deleteMessage('${m.id}')"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>`,
+          )
+          .join("");
+      }
+
+      window.markRead = async function (id) {
+        await supa.from("messages").update({ is_read: true }).eq("id", id);
+        loadMessages();
+      };
+
+      window.deleteMessage = async function (id) {
+        if (!confirm("Delete this message?")) return;
+        await supa.from("messages").delete().eq("id", id);
+        loadMessages();
+      };
+    </script>
+  </body>
+</html>

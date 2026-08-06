@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control Panel · Sign In</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Orbitron:wght@700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../config.js"></script>
+    <style>
+      :root {
+        --bg: #020208;
+        --surface: rgba(8, 8, 24, 0.75);
+        --border: rgba(0, 200, 255, 0.14);
+        --border-bright: rgba(0, 200, 255, 0.4);
+        --text: #f0f4ff;
+        --muted: #6b7fa3;
+        --cyan: #00c8ff;
+        --green: #3ddc84;
+        --red: #ff4d4d;
+        --glow: rgba(0, 200, 255, 0.18);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        min-height: 100vh;
+        background: radial-gradient(
+            circle at 20% 15%,
+            rgba(0, 200, 255, 0.08),
+            transparent 45%
+          ),
+          radial-gradient(circle at 80% 85%, rgba(61, 220, 132, 0.06), transparent 45%),
+          var(--bg);
+        color: var(--text);
+        font-family: "Space Grotesk", sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .login-box {
+        width: 100%;
+        max-width: 400px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 40px 34px;
+        backdrop-filter: blur(24px);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+      }
+      .lock-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, var(--cyan), var(--green));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        color: #04101a;
+        margin-bottom: 18px;
+        box-shadow: 0 10px 30px var(--glow);
+      }
+      h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.15rem;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin-bottom: 28px;
+        font-family: "Fira Code", monospace;
+      }
+      .field {
+        margin-bottom: 16px;
+      }
+      label {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 7px;
+      }
+      input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 14px;
+        color: var(--text);
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 0.92rem;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      input:focus {
+        border-color: var(--border-bright);
+        box-shadow: 0 0 0 3px var(--glow);
+      }
+      button {
+        width: 100%;
+        margin-top: 8px;
+        padding: 13px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.92rem;
+        color: #04101a;
+        background: linear-gradient(90deg, var(--cyan), var(--green));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      }
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 26px var(--glow);
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .error-msg {
+        display: none;
+        margin-top: 14px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: rgba(255, 77, 77, 0.08);
+        border: 1px solid rgba(255, 77, 77, 0.35);
+        color: var(--red);
+        font-size: 0.82rem;
+      }
+      .config-warn {
+        margin-top: 18px;
+        font-size: 0.78rem;
+        color: var(--muted);
+        text-align: center;
+        font-family: "Fira Code", monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-box">
+      <div class="lock-icon"><i class="fas fa-shield-halved"></i></div>
+      <h1>Control Panel</h1>
+      <p class="sub">// authenticate to manage portfolio</p>
+
+      <form id="login-form">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" required autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+        <button type="submit" id="submit-btn">
+          <i class="fas fa-right-to-bracket"></i> Sign In
+        </button>
+      </form>
+      <div class="error-msg" id="error-msg"></div>
+      <p class="config-warn" id="config-warn" style="display: none">
+        Supabase isn't configured yet — edit /config.js first.
+      </p>
+    </div>
+
+    <script>
+      const supa =
+        window.SUPABASE_URL &&
+        window.SUPABASE_ANON_KEY &&
+        window.SUPABASE_URL !== "YOUR_SUPABASE_URL"
+          ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY)
+          : null;
+
+      if (!supa) {
+        document.getElementById("config-warn").style.display = "block";
+      }
+
+      // Already signed in? go straight to dashboard.
+      (async () => {
+        if (!supa) return;
+        const { data } = await supa.auth.getSession();
+        if (data.session) window.location.href = "./dashboard.html";
+      })();
+
+      document.getElementById("login-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const errEl = document.getElementById("error-msg");
+        errEl.style.display = "none";
+        if (!supa) {
+          errEl.textContent = "Backend not configured. Edit config.js first.";
+          errEl.style.display = "block";
+          return;
+        }
+        const btn = document.getElementById("submit-btn");
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        const { error } = await supa.auth.signInWithPassword({ email, password });
+
+        if (error) {
+          errEl.textContent = error.message || "Invalid credentials.";
+          errEl.style.display = "block";
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-right-to-bracket"></i> Sign In';
+          return;
+        }
+        window.location.href = "./dashboard.html";
+      });
+    </script>
+  </body>
+</html>
