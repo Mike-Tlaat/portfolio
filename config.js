@@ -10,5 +10,5 @@
 //    supabase/schema.sql)
 // 5) Run supabase/schema.sql in the Supabase SQL editor once.
 // ============================================================
-window.SUPABASE_URL = "YOUR_SUPABASE_URL";
-window.SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+window.SUPABASE_URL = "https://fgkywthghagvgxvkfsmw.supabase.co";
+window.SUPABASE_ANON_KEY = "sb_publishable_ENvzAcF4aGXfVSd6L-VuLg_aFPhBt0F";
