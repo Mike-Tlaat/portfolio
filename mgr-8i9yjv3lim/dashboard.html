@@ -333,6 +333,50 @@
         margin-top: -10px;
         margin-bottom: 16px;
       }
+      #current-media {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .media-chip {
+        position: relative;
+        width: 72px;
+        height: 72px;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .media-chip img,
+      .media-chip video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .media-chip.video-chip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        color: var(--cyan);
+      }
+      .media-chip .chip-remove {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(255, 77, 77, 0.9);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 0.65rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+      }
       #toast {
         position: fixed;
         bottom: 24px;
@@ -448,8 +492,16 @@
               <input type="file" id="proj-cover-file" accept="image/*" />
             </div>
             <div class="field">
-              <label for="proj-images-file">Screenshots (multiple)</label>
+              <label for="proj-images-file">Screenshots (multiple, adds to existing)</label>
               <input type="file" id="proj-images-file" accept="image/*" multiple />
+            </div>
+            <div class="field full">
+              <label for="proj-videos-file">Project Video(s) (adds to existing)</label>
+              <input type="file" id="proj-videos-file" accept="video/*" multiple />
+            </div>
+            <div class="field full" id="current-media-wrap" style="display:none">
+              <label>Current Media (click × to remove)</label>
+              <div id="current-media"></div>
             </div>
           </div>
           <button class="btn btn-primary" id="save-project-btn">
@@ -615,6 +667,10 @@
             <div class="meta">
               <h4>${escapeHtml(p.name)}</h4>
               <p>${escapeHtml(p.description || "")}</p>
+              <p style="color:var(--cyan);font-size:0.75rem;margin-top:4px">
+                <i class="fas fa-image"></i> ${(p.images || []).length} images &nbsp;
+                <i class="fas fa-video"></i> ${(p.videos || []).length} videos
+              </p>
             </div>
             <div class="actions">
               <button class="btn btn-ghost btn-small" onclick="editProject('${p.id}')"><i class="fas fa-pen"></i></button>
@@ -636,6 +692,46 @@
         })[c]);
       }
 
+      // Media currently attached to the project being edited (kept in sync with the DB arrays)
+      let editingImages = [];
+      let editingVideos = [];
+
+      function renderCurrentMedia() {
+        const wrap = document.getElementById("current-media-wrap");
+        const box = document.getElementById("current-media");
+        const items = [
+          ...editingImages.map((m, i) => ({ ...m, type: "image", idx: i })),
+          ...editingVideos.map((m, i) => ({ ...m, type: "video", idx: i })),
+        ];
+        if (!items.length) {
+          wrap.style.display = "none";
+          box.innerHTML = "";
+          return;
+        }
+        wrap.style.display = "block";
+        box.innerHTML = items
+          .map(
+            (m) => `
+          <div class="media-chip ${m.type === "video" ? "video-chip" : ""}">
+            ${
+              m.type === "video"
+                ? `<i class="fas fa-film"></i>`
+                : `<img src="${m.url}" alt="${escapeHtml(m.name || "")}" />`
+            }
+            <button type="button" class="chip-remove" title="Remove" onclick="removeCurrentMedia('${m.type}', ${m.idx})">
+              <i class="fas fa-xmark"></i>
+            </button>
+          </div>`,
+          )
+          .join("");
+      }
+
+      window.removeCurrentMedia = function (type, idx) {
+        if (type === "video") editingVideos.splice(idx, 1);
+        else editingImages.splice(idx, 1);
+        renderCurrentMedia();
+      };
+
       window.editProject = function (id) {
         const p = (window.__projects || []).find((x) => x.id === id);
         if (!p) return;
@@ -646,6 +742,9 @@
         document.getElementById("proj-tech").value = (p.technologies || []).join(", ");
         document.getElementById("save-project-label").textContent = "Update Project";
         document.getElementById("cancel-edit-btn").style.display = "inline-flex";
+        editingImages = JSON.parse(JSON.stringify(p.images || []));
+        editingVideos = JSON.parse(JSON.stringify(p.videos || []));
+        renderCurrentMedia();
         window.scrollTo({ top: 0, behavior: "smooth" });
       };
 
@@ -659,8 +758,12 @@
         document.getElementById("proj-tech").value = "";
         document.getElementById("proj-cover-file").value = "";
         document.getElementById("proj-images-file").value = "";
+        document.getElementById("proj-videos-file").value = "";
         document.getElementById("save-project-label").textContent = "Add Project";
         document.getElementById("cancel-edit-btn").style.display = "none";
+        editingImages = [];
+        editingVideos = [];
+        renderCurrentMedia();
       }
 
       window.deleteProject = async function (id) {
@@ -676,6 +779,7 @@
         const name = document.getElementById("proj-name").value.trim();
         if (!name) return toast("Project name is required");
         btn.disabled = true;
+        const originalLabel = btn.innerHTML;
         try {
           const tech = document
             .getElementById("proj-tech")
@@ -692,15 +796,30 @@
           const coverFile = document.getElementById("proj-cover-file").files[0];
           if (coverFile) payload.cover = await uploadFile(coverFile, "projects/covers");
 
+          // Images: start from whatever remains in editingImages (existing minus any removed),
+          // then append newly uploaded screenshots.
           const imgFiles = Array.from(document.getElementById("proj-images-file").files || []);
           if (imgFiles.length) {
-            const uploaded = [];
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading images...';
             for (const f of imgFiles) {
               const url = await uploadFile(f, "projects/images");
-              uploaded.push({ name: f.name, url });
+              editingImages.push({ name: f.name, url });
             }
-            payload.images = uploaded;
           }
+          payload.images = editingImages;
+
+          // Videos: same append behaviour as images.
+          const vidFiles = Array.from(document.getElementById("proj-videos-file").files || []);
+          if (vidFiles.length) {
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading video...';
+            for (const f of vidFiles) {
+              const url = await uploadFile(f, "projects/videos");
+              editingVideos.push({ name: f.name, url });
+            }
+          }
+          payload.videos = editingVideos;
+
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
           if (editingProjectId) {
             const { error } = await supa.from("projects").update(payload).eq("id", editingProjectId);
@@ -711,6 +830,7 @@
             if (error) throw error;
             toast("Project added");
           }
+          btn.innerHTML = originalLabel;
           resetProjectForm();
           loadProjects();
         } catch (err) {
@@ -718,6 +838,7 @@
           toast("Failed: " + (err.message || "unknown error"));
         } finally {
           btn.disabled = false;
+          if (!document.getElementById("save-project-label")) btn.innerHTML = originalLabel;
         }
       });
 
